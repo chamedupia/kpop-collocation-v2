@@ -3826,11 +3826,42 @@ function SitSpeakMission({ sit }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [isListening, setIsListening] = useState(false);
+  const recogRef = React.useRef(null);
+
   if (list.length === 0) return <div className="tt12 text-purple-600">아직 등록된 말하기 미션이 없습니다.</div>;
   const task = list[0];
 
+  async function startListening() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { setErr("이 브라우저는 음성 인식을 지원하지 않습니다. Chrome을 사용해 주세요."); return; }
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      setErr("마이크 권한이 필요합니다. 브라우저에서 마이크를 허용해 주세요."); return;
+    }
+    const recog = new SR();
+    recog.lang = "ko-KR";
+    recog.continuous = false;
+    recog.interimResults = false;
+    recog.onstart = () => setIsListening(true);
+    recog.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setText((prev) => prev ? prev + " " + transcript : transcript);
+    };
+    recog.onerror = (e) => { setErr("음성 인식 오류: " + e.error); setIsListening(false); };
+    recog.onend = () => setIsListening(false);
+    recogRef.current = recog;
+    recog.start();
+  }
+
+  function stopListening() {
+    if (recogRef.current) { recogRef.current.stop(); }
+    setIsListening(false);
+  }
+
   async function submit() {
-    if (!text.trim()) { setErr("문장을 먼저 작성해 주세요."); return; }
+    if (!text.trim()) { setErr("문장을 먼저 작성하거나 말해 보세요."); return; }
     if (isTooSimilarToHint(text, task.hint)) { setErr("보기와 내용이 같거나 비슷합니다. 자신만의 문장으로 다시 써 보세요!"); return; }
     setErr(""); setLoading(true); setFb(null);
     const prompt = buildGradePrompt({ task: "친구에게 건네는 짧은 구어 발화", situation: task.task, required: task.required, learnerText: text });
@@ -3850,8 +3881,22 @@ function SitSpeakMission({ sit }) {
         </div>
       </div>
 
+      {/* 🎙️ 말하기 버튼 */}
+      <div className="flex gap-2">
+        <button onClick={isListening ? stopListening : startListening}
+          className={`flex-1 rounded-full py-3 text-sm font-black shadow active:scale-95 transition ${isListening ? "bg-rose-400 text-white animate-pulse" : "bg-gradient-to-r from-purple-400 to-pink-400 text-white"}`}>
+          {isListening ? "⏹ 녹음 중지" : "🎙️ 말하기"}
+        </button>
+        {text && <button onClick={() => { setText(""); setFb(null); setErr(""); }}
+          className="rounded-full px-4 py-3 text-sm font-bold bg-purple-100 text-purple-500 active:scale-95">
+          지우기
+        </button>}
+      </div>
+      {isListening && <p className="tt11 text-rose-500 text-center animate-pulse">🔴 듣고 있어요… 말씀하세요</p>}
+
+      {/* ✏️ 직접 쓰기 */}
       <div>
-        <label className="text-xs font-bold text-purple-600">✏️ 한 문장으로 직접 써 보세요</label>
+        <label className="text-xs font-bold text-purple-600">✏️ 또는 직접 써 보세요</label>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={200}
           placeholder={task.hint}
           className="w-full mt-1 rounded-2xl border border-purple-200 glass80 p-3 text-sm text-purple-800 outline-none focus:border-pink-300" />
