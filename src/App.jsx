@@ -3842,12 +3842,15 @@ function SitSpeakMission({ sit }) {
     }
     const recog = new SR();
     recog.lang = "ko-KR";
-    recog.continuous = false;
-    recog.interimResults = false;
+    recog.continuous = true;
+    recog.interimResults = true;
     recog.onstart = () => setIsListening(true);
     recog.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setText((prev) => prev ? prev + " " + transcript : transcript);
+      let final = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      }
+      if (final) setText((prev) => prev ? prev + " " + final : final);
     };
     recog.onerror = (e) => { setErr("음성 인식 오류: " + e.error); setIsListening(false); };
     recog.onend = () => setIsListening(false);
