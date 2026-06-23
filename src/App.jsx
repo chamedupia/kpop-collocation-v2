@@ -686,7 +686,11 @@ function PlayerScreen({ go, ctx }) {
 
   return (
     <div className="px-5 pt-3 pb-24">
-      <Header title={`${sit?.name} 학습 ${sit?.icon}`} onBack={() => ctx.from === "todays" ? go("todays") : go("songList", { situation: song.situation, artist: null })} />
+      <Header title={`${sit?.name || ""} 학습 ${sit?.icon || ""}`} onBack={() => {
+        if (ctx.from === "todays") go("todays");
+        else if (song?.situation) go("songList", { situation: song.situation, artist: null });
+        else go("situations");
+      }} />
       <div className="text-center mt-2 mb-3">
         <Pill className="bg-pink-100 text-pink-500">선택한 상황: {sit?.name}</Pill>
         <p className="tt11 text-purple-600 mt-2">노래를 듣고 노래 가사의 상황과 메시지를 생각해 보세요</p>
@@ -3170,6 +3174,24 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
       {fb && <>
         <GradeResult fb={fb} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
+
+        {/* 가사 복사 + Suno 연동 */}
+        <div className="mt-3 rounded-2xl bg-gradient-to-r from-violet-50 to-pink-50 border border-purple-100 p-3">
+          <div className="tt11 font-bold text-purple-700 mb-2">🎵 내 가사로 노래 만들기</div>
+          <p className="tt10 text-purple-500 mb-2">아래 버튼으로 가사를 복사한 후 Suno AI에 붙여넣으면 실제 노래가 완성됩니다!</p>
+          <div className="flex gap-2">
+            <button onClick={() => {
+              navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("복사 실패. 가사를 직접 선택해 복사해 주세요."));
+            }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">
+              📋 가사 복사
+            </button>
+            <button onClick={() => window.open("https://suno.com", "_blank")}
+              className="flex-1 rounded-full py-2 tt11 font-black bg-gradient-to-r from-violet-500 to-purple-500 text-white active:scale-95">
+              🎤 Suno에서 열기 →
+            </button>
+          </div>
+        </div>
+
         <div className="flex gap-2 mt-3">
           <button onClick={() => { setText(""); setFb(null); }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">다시 쓰기</button>
           <button onClick={() => { if (saveRecord) saveRecord({ word: task.required.join(", "), song: "가사 창작", text }); go("course"); }}
