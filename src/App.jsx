@@ -590,7 +590,7 @@ function SongListScreen({ go, ctx }) {
 /* ===================== 화면 3: 노래 듣기 (mock player + 가사) ===================== */
 function PlayerScreen({ go, ctx }) {
   const { song } = ctx;
-  if (!song) { go("home"); return null; }
+  if (!song) return <div className="px-5 pt-10 text-center text-purple-600">노래를 선택해 주세요.</div>;
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [ttsPlaying, setTtsPlaying] = useState(false);
@@ -834,7 +834,7 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
       </div>
 
       <div className="mt-4 mb-2">
-        <button onClick={() => go("player", { song })}
+        <button onClick={() => go("songList", { situation: song.situation, artist: null })}
           className="w-9 h-9 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center active:scale-90 shadow-sm">
           ←
         </button>
@@ -4329,8 +4329,12 @@ export default function App() {
 
   function go(next, newCtx = {}) {
     try { window.speechSynthesis.cancel(); } catch(e) {}
-    setCtx((c) => ({ ...c, ...newCtx }));
+    setCtx((c) => {
+      const merged = { ...c, ...newCtx };
+      return merged;
+    });
     setScreen(next);
+    window.scrollTo(0, 0);
     if (NAV.find((n) => n.id === next)) setTab(next);
     else if (next === "home") setTab("home");
   }
