@@ -590,16 +590,14 @@ function SongListScreen({ go, ctx }) {
 /* ===================== 화면 3: 노래 듣기 (mock player + 가사) ===================== */
 function PlayerScreen({ go, ctx }) {
   const { song } = ctx;
-  if (!song) return <div className="px-5 pt-10 text-center text-purple-600">노래를 선택해 주세요.</div>;
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const audioRef = React.useRef(null);
-  const sit = SITUATIONS.find((s) => s.id === song.situation);
 
   // 음원 파일 재생/일시정지
   React.useEffect(() => {
-    if (!song.audioFile) return;
+    if (!song?.audioFile) return;
     if (!audioRef.current) {
       audioRef.current = new Audio(song.audioFile);
       audioRef.current.addEventListener("timeupdate", () => {
@@ -611,14 +609,17 @@ function PlayerScreen({ go, ctx }) {
     if (playing) audioRef.current.play();
     else audioRef.current.pause();
     return () => {};
-  }, [playing, song.audioFile]);
+  }, [playing, song?.audioFile]);
 
   React.useEffect(() => {
     return () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } window.speechSynthesis.cancel(); };
-  }, [song.id]);
+  }, [song?.id]);
 
   // 화면 이동 시 TTS 정리
   React.useEffect(() => () => { window.speechSynthesis.cancel(); }, []);
+
+  if (!song) return <div className="px-5 pt-10 text-center text-purple-600">노래를 선택해 주세요.</div>;
+  const sit = SITUATIONS.find((s) => s.id === song.situation);
 
   // 문장 듣기: 가사 줄 TTS (자연스러운 한국어 음성)
   function pickBestKoreanVoice() {
