@@ -567,9 +567,9 @@ function SongListScreen({ go, ctx }) {
               <div className="tt10 text-purple-600">{song.artist}</div>
               <div className="font-bold text-purple-700">{song.title}</div>
               <div className="flex gap-2 mt-2">
-                <button onClick={() => go("player", { song })}
+                <button onClick={() => go("player", { song, situation: song.situation })}
                   className="flex-1 rounded-full py-1.5 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">▶ 듣기</button>
-                <button onClick={() => go("collocation", { song, idx: 0 })}
+                <button onClick={() => go("collocation", { song, idx: 0, situation: song.situation })}
                   className="flex-1 rounded-full py-1.5 tt11 font-bold bg-pink-400 text-white active:scale-95">연어 보기</button>
               </div>
             </div>
@@ -2739,7 +2739,7 @@ function PuzzleScreen({ go, progress, award }) {
 }
 
 /* =============================== AI 평가 결과 카드 (문장·가사 공용) =============================== */
-function GradeResult({ fb }) {
+function GradeResult({ fb, onSuno }) {
   return (
     <div className="mt-4 rounded-2xl glass90 shadow p-3 space-y-2">
       <div className="flex items-center justify-between">
@@ -2763,6 +2763,21 @@ function GradeResult({ fb }) {
         <div className="tt11 font-bold text-pink-600 mb-0.5">✍️ 수정 예시</div>
         <div className="tt12 text-purple-800 whitespace-pre-line">{fb.revision}</div>
       </div>
+      {onSuno && (
+        <div className="rounded-xl bg-gradient-to-r from-violet-50 to-pink-50 border border-purple-100 p-2.5">
+          <div className="tt11 font-bold text-purple-700 mb-1.5">🎵 내 가사로 노래 만들기</div>
+          <div className="flex gap-2">
+            <button onClick={onSuno.copy}
+              className="flex-1 rounded-full py-1.5 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">
+              📋 가사 복사
+            </button>
+            <button onClick={() => window.open("https://suno.com", "_blank")}
+              className="flex-1 rounded-full py-1.5 tt11 font-black bg-gradient-to-r from-violet-500 to-purple-500 text-white active:scale-95">
+              🎤 Suno에서 열기 →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -3172,26 +3187,8 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
       </button>
 
       {fb && <>
-        <GradeResult fb={fb} />
+        <GradeResult fb={fb} onSuno={{ copy: () => navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("직접 선택해서 복사해 주세요.")) }} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
-
-        {/* 가사 복사 + Suno 연동 */}
-        <div className="mt-3 rounded-2xl bg-gradient-to-r from-violet-50 to-pink-50 border border-purple-100 p-3">
-          <div className="tt11 font-bold text-purple-700 mb-2">🎵 내 가사로 노래 만들기</div>
-          <p className="tt10 text-purple-500 mb-2">아래 버튼으로 가사를 복사한 후 Suno AI에 붙여넣으면 실제 노래가 완성됩니다!</p>
-          <div className="flex gap-2">
-            <button onClick={() => {
-              navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("복사 실패. 가사를 직접 선택해 복사해 주세요."));
-            }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">
-              📋 가사 복사
-            </button>
-            <button onClick={() => window.open("https://suno.com", "_blank")}
-              className="flex-1 rounded-full py-2 tt11 font-black bg-gradient-to-r from-violet-500 to-purple-500 text-white active:scale-95">
-              🎤 Suno에서 열기 →
-            </button>
-          </div>
-        </div>
-
         <div className="flex gap-2 mt-3">
           <button onClick={() => { setText(""); setFb(null); }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">다시 쓰기</button>
           <button onClick={() => { if (saveRecord) saveRecord({ word: task.required.join(", "), song: "가사 창작", text }); go("course"); }}
