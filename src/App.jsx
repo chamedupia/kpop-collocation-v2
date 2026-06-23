@@ -73,6 +73,7 @@ const SONGS = [
     mood: "강한 설렘", emoji: "💗",
     cover: "from-pink-300 via-rose-300 to-purple-300",
     youtubeId: "_hFarg-Obuc", lyricStart: 62,
+    audioFile: "/audio/treasure-saranghae.mp3",
     lyricLines: ["나만 바라봐 뜨거운 태양처럼", "맘대로 내 맘을 뒤집어 놓고", "돌아서지 마! 내 손을 잡아"],
     collocations: [{ id: "treasure-son-jabda", word: "손을 잡다", body: "손", meaning: "관계 연어. 함께하겠다는 마음을 표현", category: "관계 연어", level: "초급" }],
   },
@@ -589,6 +590,7 @@ function SongListScreen({ go, ctx }) {
 /* ===================== 화면 3: 노래 듣기 (mock player + 가사) ===================== */
 function PlayerScreen({ go, ctx }) {
   const { song } = ctx;
+  if (!song) { go("home"); return null; }
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [ttsPlaying, setTtsPlaying] = useState(false);
@@ -704,7 +706,18 @@ function PlayerScreen({ go, ctx }) {
           ))}
           {/* 듣기 버튼 행 */}
           <div className="flex gap-2 mt-3 justify-center">
-            {song.youtubeId && (
+            {song.audioFile && (
+              <button onClick={() => {
+                const audio = new Audio(song.audioFile);
+                audio.currentTime = song.lyricStart || 0;
+                audio.play();
+                setTimeout(() => audio.pause(), 20000);
+              }}
+                className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
+                ▶ 구간 듣기
+              </button>
+            )}
+            {!song.audioFile && song.youtubeId && (
               <button onClick={handleSegmentYouTube}
                 className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
                 ▶ 구간 듣기
@@ -718,7 +731,10 @@ function PlayerScreen({ go, ctx }) {
               </button>
             )}
           </div>
-          {song.youtubeId && (
+          {song.audioFile && (
+            <p className="tt10 text-white/50 mt-2">가사 시점부터 20초간 재생됩니다</p>
+          )}
+          {!song.audioFile && song.youtubeId && (
             <p className="tt10 text-white/50 mt-2">구간 듣기는 YouTube에서 해당 가사 시점({Math.floor((song.lyricStart||0)/60)}분 {(song.lyricStart||0)%60}초)부터 재생됩니다</p>
           )}
         </div>
@@ -783,7 +799,7 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
 
   return (
     <div className="px-5 pt-3 pb-24">
-      <Header title="연어 학습 💗" onBack={() => go("player", { song })} />
+      <Header title="연어 학습 💗" onBack={() => go("songList", { situation: song.situation, artist: null })} />
       <p className="text-center tt11 text-purple-600 mb-2">노래 속 표현 배우기</p>
 
       <div className="rounded-2xl glass85 shadow p-3">
@@ -4368,4 +4384,3 @@ export default function App() {
     </div>
   );
 }
-
