@@ -2802,56 +2802,86 @@ const TASK_LANGS = [
   { code: "ja", label: "日", flag: "🇯🇵" },
   { code: "vi", label: "VI", flag: "🇻🇳" },
 ];
+/* ── 문항 사전 번역 (문장 만들기 7 + 담화 확장 4 = 11문항) ── */
+const TASK_TRANSLATIONS = {
+  // SENTENCE_TASKS
+  "좋아하는 사람과 오랜만에 다시 만나게 되었습니다.": {
+    en: { situation: "You're meeting someone you like again after a long time.", relation: "Cautious but with mutual interest", purpose: "Express excitement and feelings" },
+    zh: { situation: "你和喜欢的人久别重逢了。", relation: "谨慎但有好感的关系", purpose: "表达喜悦和心动" },
+    ja: { situation: "好きな人と久しぶりに再会することになりました。", relation: "慎重だが好意がある関係", purpose: "嬉しさとときめきを伝える" },
+    vi: { situation: "Bạn gặp lại người mình thích sau một thời gian dài.", relation: "Cẩn thận nhưng có thiện cảm", purpose: "Thể hiện sự vui mừng và rung động" },
+  },
+  "멀어진 사람을 떠올리며 친구에게 속마음을 말합니다.": {
+    en: { situation: "You share your feelings with a friend about someone who has drifted away.", relation: "Close enough to share honest feelings", purpose: "Express a sense of loss" },
+    zh: { situation: "向朋友倾诉对疏远之人的真实想法。", relation: "可以坦诚分享情感的关系", purpose: "表达失落感" },
+    ja: { situation: "疎遠になった人を思いながら友達に本音を話します。", relation: "素直な感情を分かち合える関係", purpose: "喪失感を表現する" },
+    vi: { situation: "Tâm sự với bạn về một người đã xa cách.", relation: "Có thể chia sẻ cảm xúc chân thật", purpose: "Thể hiện cảm giác mất mát" },
+  },
+  "답답한 현실에서 벗어나고 싶은 마음을 친구에게 말합니다.": {
+    en: { situation: "You tell a friend you want to break free from a frustrating reality.", relation: "Close enough to share honestly", purpose: "Express frustration and resolve to break through" },
+    zh: { situation: "向朋友倾诉想要摆脱压抑现实的心情。", relation: "可以畅所欲言的关系", purpose: "表达郁闷和突破的决心" },
+    ja: { situation: "息苦しい現実から抜け出したい気持ちを友達に話します。", relation: "本音を気軽に話せる関係", purpose: "もどかしさと突破の意志を伝える" },
+    vi: { situation: "Bạn chia sẻ với bạn bè mong muốn thoát khỏi hiện thực ngột ngạt.", relation: "Có thể nói thật lòng", purpose: "Bày tỏ sự bức bối và ý chí vượt qua" },
+  },
+  "오랜만에 친구를 만나 반가운 마음을 표현합니다.": {
+    en: { situation: "You express joy at meeting an old friend after a long time.", relation: "Close peers", purpose: "Express joy and closeness" },
+    zh: { situation: "和久违的朋友相见,表达高兴的心情。", relation: "亲近的同辈关系", purpose: "表达喜悦和亲密感" },
+    ja: { situation: "久しぶりに友達に会って嬉しい気持ちを表します。", relation: "親しい同年代の関係", purpose: "嬉しさと親しみを表現する" },
+    vi: { situation: "Gặp lại bạn cũ sau thời gian dài và bày tỏ niềm vui.", relation: "Bạn bè thân thiết cùng trang lứa", purpose: "Thể hiện niềm vui và sự thân mật" },
+  },
+  "진로 때문에 불안해서 선배에게 고민을 털어놓습니다.": {
+    en: { situation: "You confide in a senior about anxiety regarding your career path.", relation: "Friendly senior-junior with respect", purpose: "Express worries and seek advice" },
+    zh: { situation: "因前途感到不安,向前辈倾诉烦恼。", relation: "亲近但需尊重的前辈关系", purpose: "表达烦恼并寻求建议" },
+    ja: { situation: "進路のことで不安になり、先輩に悩みを打ち明けます。", relation: "親しいが尊重が必要な先輩後輩関係", purpose: "悩みを伝えてアドバイスを求める" },
+    vi: { situation: "Lo lắng về con đường tương lai, bạn tâm sự với đàn anh/chị.", relation: "Quan hệ tiền bối thân thiết nhưng tôn trọng", purpose: "Bày tỏ nỗi lo và xin lời khuyên" },
+  },
+  "다시 목표를 세우고 싶은 마음을 선생님께 말합니다.": {
+    en: { situation: "You tell your teacher you want to set new goals again.", relation: "Respectful and trusting relationship", purpose: "Express resolve and goals" },
+    zh: { situation: "向老师表达想要重新设立目标的心情。", relation: "尊重与信任的关系", purpose: "表达决心和目标" },
+    ja: { situation: "再び目標を立てたい気持ちを先生に話します。", relation: "尊敬と信頼のある関係", purpose: "決意と目標を表現する" },
+    vi: { situation: "Bạn nói với thầy/cô về mong muốn đặt lại mục tiêu.", relation: "Quan hệ tôn trọng và tin tưởng", purpose: "Bày tỏ quyết tâm và mục tiêu" },
+  },
+  "힘든 시간을 버티게 해 준 존재의 의미를 말합니다.": {
+    en: { situation: "You speak about the meaning of someone who helped you through hard times.", relation: "Deep emotional bond", purpose: "Express symbolic meaning" },
+    zh: { situation: "诉说陪你度过艰难时光之人的意义。", relation: "深厚的情感纽带", purpose: "表达象征性的意义" },
+    ja: { situation: "つらい時間を支えてくれた存在の意味を語ります。", relation: "深い情緒的絆", purpose: "象徴的な意味を表現する" },
+    vi: { situation: "Bạn nói về ý nghĩa của người đã giúp bạn vượt qua khó khăn.", relation: "Mối quan hệ tình cảm sâu sắc", purpose: "Thể hiện ý nghĩa biểu tượng" },
+  },
+  // BRIDGE_TASKS
+  "요즘 많이 지쳐 있었는데 친구 덕분에 다시 괜찮아졌습니다.": {
+    en: { situation: "I've been exhausted lately, but thanks to a friend, I'm feeling better.", relation: "A close friend I can openly share feelings with", purpose: "Talk about a difficult time and how I recovered" },
+    zh: { situation: "最近一直很疲惫,多亏朋友我才重新振作起来。", relation: "可以坦率分享情感的好友", purpose: "讲述困难时期和恢复的过程" },
+    ja: { situation: "最近とても疲れていましたが、友達のおかげでまた元気になりました。", relation: "感情を気軽に分かち合える親しい友達", purpose: "つらかった状況と回復の過程を話す" },
+    vi: { situation: "Gần đây tôi rất mệt mỏi nhưng nhờ bạn mà tôi đã ổn trở lại.", relation: "Bạn thân có thể thoải mái chia sẻ cảm xúc", purpose: "Kể về thời gian khó khăn và quá trình hồi phục" },
+  },
+  "비 오는 날, 예전에 누군가와 함께 걸었던 시간이 떠올랐습니다.": {
+    en: { situation: "On a rainy day, I remembered the time I once walked with someone.", relation: "A friend I can share memories with", purpose: "Connect a past memory with present feelings" },
+    zh: { situation: "下雨天,我想起了以前和某人一起走过的时光。", relation: "可以分享回忆的朋友", purpose: "连接过去的记忆与现在的情感" },
+    ja: { situation: "雨の日、昔誰かと一緒に歩いた時間を思い出しました。", relation: "思い出を分かち合える友達", purpose: "過去の記憶と今の感情をつなぐ" },
+    vi: { situation: "Vào ngày mưa, tôi nhớ lại khoảng thời gian từng đi cùng ai đó.", relation: "Người bạn có thể chia sẻ kỷ niệm", purpose: "Kết nối ký ức quá khứ với cảm xúc hiện tại" },
+  },
+  "한동안 방향을 잃었지만 다시 목표를 생각하게 되었습니다.": {
+    en: { situation: "I lost my way for a while, but I've started thinking about my goals again.", relation: "A senior I can ask for advice", purpose: "Explain the flow from confusion to renewed direction" },
+    zh: { situation: "曾经迷失方向,但又开始重新思考目标。", relation: "可以请教的前辈", purpose: "说明从混乱到转变的过程" },
+    ja: { situation: "しばらく道を見失っていましたが、再び目標を考えるようになりました。", relation: "アドバイスを求められる先輩", purpose: "混乱と転換の流れを説明する" },
+    vi: { situation: "Tôi đã lạc lối một thời gian nhưng bắt đầu nghĩ lại về mục tiêu.", relation: "Đàn anh/chị có thể xin lời khuyên", purpose: "Giải thích quá trình từ bối rối đến chuyển biến" },
+  },
+  "멀어진 사람을 아직 완전히 잊지 못하고 있습니다.": {
+    en: { situation: "I still can't completely forget someone who has drifted away.", relation: "A close friend I can share honest feelings with", purpose: "Express the sense of loss and lingering meaning" },
+    zh: { situation: "对疏远的人,我还没有完全忘记。", relation: "可以坦诚分享感情的好友", purpose: "表达失落感和留存的意义" },
+    ja: { situation: "疎遠になった人をまだ完全には忘れられずにいます。", relation: "素直な感情を分かち合える親しい友達", purpose: "喪失感と残された意味を表現する" },
+    vi: { situation: "Tôi vẫn chưa thể hoàn toàn quên người đã xa cách.", relation: "Bạn thân có thể chia sẻ cảm xúc chân thật", purpose: "Thể hiện cảm giác mất mát và ý nghĩa còn lại" },
+  },
+};
+
 function TaskL1Toggle({ task }) {
   const [lang, setLang] = useState("ko");
-  const [translated, setTranslated] = useState({});
-  const [loading, setLoading] = useState(false);
 
-  async function switchLang(code) {
-    setLang(code);
-    if (code === "ko" || translated[code]) return;
-    setLoading(true);
-    try {
-      const langName = { en: "English", zh: "Chinese (Simplified)", ja: "Japanese", vi: "Vietnamese" }[code];
-      const prompt = `Translate these three short Korean sentences into ${langName}. Return ONLY raw JSON with keys "situation", "relation", "purpose". No markdown, no code fence, no explanation.
+  function switchLang(code) { setLang(code); }
 
-Korean:
-situation: ${task.situation}
-relation: ${task.relation}
-purpose: ${task.purpose}
+  const dict = TASK_TRANSLATIONS[task.situation];
+  const tr = dict ? dict[lang] : null;
 
-Output (raw JSON only):`;
-      const result = await callClaudeJSON(prompt);
-      // 결과 검증: 모든 키가 있고 비어있지 않은지
-      if (result && result.situation && result.relation && result.purpose) {
-        setTranslated((t) => ({ ...t, [code]: result }));
-      } else {
-        throw new Error("Incomplete translation");
-      }
-    } catch (e) {
-      // 재시도 1번
-      try {
-        const langName = { en: "English", zh: "Chinese", ja: "Japanese", vi: "Vietnamese" }[code];
-        const prompt2 = `Translate to ${langName}. Output only JSON: {"situation":"...","relation":"...","purpose":"..."}\n\nsituation: ${task.situation}\nrelation: ${task.relation}\npurpose: ${task.purpose}`;
-        const result2 = await callClaudeJSON(prompt2);
-        if (result2 && result2.situation) {
-          setTranslated((t) => ({ ...t, [code]: result2 }));
-        } else {
-          throw new Error("Retry failed");
-        }
-      } catch (e2) {
-        setTranslated((t) => ({ ...t, [code]: { situation: "번역 실패 — 다시 시도해 주세요", relation: "", purpose: "", failed: true } }));
-      }
-    }
-    setLoading(false);
-  }
-
-  function retry(code) {
-    setTranslated((t) => { const c = { ...t }; delete c[code]; return c; });
-    switchLang(code);
-  }
-
-  const tr = translated[lang];
   return (
     <div className="mt-2">
       <div className="flex gap-1 flex-wrap">
@@ -2862,21 +2892,16 @@ Output (raw JSON only):`;
           </button>
         ))}
       </div>
-      {loading && <div className="tt10 text-indigo-400 mt-1">번역 중…</div>}
       {lang !== "ko" && tr && (
         <div className="mt-1.5 rounded-xl bg-indigo-50 border border-indigo-100 p-2.5 space-y-0.5 tt11 text-indigo-700">
-          {tr.failed ? (
-            <div className="text-center">
-              <div className="text-rose-500 mb-1">{tr.situation}</div>
-              <button onClick={() => retry(lang)} className="rounded-full px-3 py-0.5 tt10 font-bold bg-indigo-500 text-white">🔄 다시 번역</button>
-            </div>
-          ) : (
-            <>
-              <div><b>Situation:</b> {tr.situation}</div>
-              {tr.relation && <div><b>Relation:</b> {tr.relation}</div>}
-              {tr.purpose && <div><b>Purpose:</b> {tr.purpose}</div>}
-            </>
-          )}
+          <div><b>Situation:</b> {tr.situation}</div>
+          <div><b>Relation:</b> {tr.relation}</div>
+          <div><b>Purpose:</b> {tr.purpose}</div>
+        </div>
+      )}
+      {lang !== "ko" && !tr && (
+        <div className="mt-1.5 rounded-xl bg-amber-50 p-2 tt10 text-amber-600 text-center">
+          이 문항의 번역이 아직 준비되지 않았습니다.
         </div>
       )}
     </div>
