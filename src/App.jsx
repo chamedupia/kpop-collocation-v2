@@ -2812,14 +2812,43 @@ function TaskL1Toggle({ task }) {
     if (code === "ko" || translated[code]) return;
     setLoading(true);
     try {
-      const langName = { en: "English", zh: "Chinese", ja: "Japanese", vi: "Vietnamese" }[code];
-      const prompt = `Translate the following Korean task description into ${langName}. Return ONLY a JSON object with these keys: situation, relation, purpose. Keep it short and natural.\n\n상황: ${task.situation}\n관계: ${task.relation}\n말하기 목적: ${task.purpose}\n\nJSON only, no markdown:`;
+      const langName = { en: "English", zh: "Chinese (Simplified)", ja: "Japanese", vi: "Vietnamese" }[code];
+      const prompt = `Translate these three short Korean sentences into ${langName}. Return ONLY raw JSON with keys "situation", "relation", "purpose". No markdown, no code fence, no explanation.
+
+Korean:
+situation: ${task.situation}
+relation: ${task.relation}
+purpose: ${task.purpose}
+
+Output (raw JSON only):`;
       const result = await callClaudeJSON(prompt);
-      setTranslated((t) => ({ ...t, [code]: result }));
+      // 결과 검증: 모든 키가 있고 비어있지 않은지
+      if (result && result.situation && result.relation && result.purpose) {
+        setTranslated((t) => ({ ...t, [code]: result }));
+      } else {
+        throw new Error("Incomplete translation");
+      }
     } catch (e) {
-      setTranslated((t) => ({ ...t, [code]: { situation: "(Translation unavailable)", relation: "", purpose: "" } }));
+      // 재시도 1번
+      try {
+        const langName = { en: "English", zh: "Chinese", ja: "Japanese", vi: "Vietnamese" }[code];
+        const prompt2 = `Translate to ${langName}. Output only JSON: {"situation":"...","relation":"...","purpose":"..."}\n\nsituation: ${task.situation}\nrelation: ${task.relation}\npurpose: ${task.purpose}`;
+        const result2 = await callClaudeJSON(prompt2);
+        if (result2 && result2.situation) {
+          setTranslated((t) => ({ ...t, [code]: result2 }));
+        } else {
+          throw new Error("Retry failed");
+        }
+      } catch (e2) {
+        setTranslated((t) => ({ ...t, [code]: { situation: "번역 실패 — 다시 시도해 주세요", relation: "", purpose: "", failed: true } }));
+      }
     }
     setLoading(false);
+  }
+
+  function retry(code) {
+    setTranslated((t) => { const c = { ...t }; delete c[code]; return c; });
+    switchLang(code);
   }
 
   const tr = translated[lang];
@@ -2836,9 +2865,18 @@ function TaskL1Toggle({ task }) {
       {loading && <div className="tt10 text-indigo-400 mt-1">번역 중…</div>}
       {lang !== "ko" && tr && (
         <div className="mt-1.5 rounded-xl bg-indigo-50 border border-indigo-100 p-2.5 space-y-0.5 tt11 text-indigo-700">
-          <div><b>Situation:</b> {tr.situation}</div>
-          {tr.relation && <div><b>Relation:</b> {tr.relation}</div>}
-          {tr.purpose && <div><b>Purpose:</b> {tr.purpose}</div>}
+          {tr.failed ? (
+            <div className="text-center">
+              <div className="text-rose-500 mb-1">{tr.situation}</div>
+              <button onClick={() => retry(lang)} className="rounded-full px-3 py-0.5 tt10 font-bold bg-indigo-500 text-white">🔄 다시 번역</button>
+            </div>
+          ) : (
+            <>
+              <div><b>Situation:</b> {tr.situation}</div>
+              {tr.relation && <div><b>Relation:</b> {tr.relation}</div>}
+              {tr.purpose && <div><b>Purpose:</b> {tr.purpose}</div>}
+            </>
+          )}
         </div>
       )}
     </div>
