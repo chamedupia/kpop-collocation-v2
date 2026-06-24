@@ -304,9 +304,16 @@ function AlbumCover({ song, className = "", style = {} }) {
 
 /* ============================== UI 공통 요소 ============================== */
 function StatusBar() {
+  const [time, setTime] = useState(() => {
+    const d = new Date(); return `${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
+  });
+  React.useEffect(() => {
+    const t = setInterval(() => { const d = new Date(); setTime(`${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`); }, 30000);
+    return () => clearInterval(t);
+  }, []);
   return (
     <div className="flex justify-between items-center px-5 pt-2 pb-1 tt11 font-semibold statusbar">
-      <span>9:41</span>
+      <span>{time}</span>
       <span className="tracking-widest">····· 📶 🔋</span>
     </div>
   );
@@ -2764,17 +2771,22 @@ function GradeResult({ fb, onSuno }) {
         <div className="tt12 text-purple-800 whitespace-pre-line">{fb.revision}</div>
       </div>
       {onSuno && (
-        <div className="rounded-xl bg-gradient-to-r from-violet-50 to-pink-50 border border-purple-100 p-2.5">
-          <div className="tt11 font-bold text-purple-700 mb-1.5">🎵 내 가사로 노래 만들기</div>
-          <div className="flex gap-2">
-            <button onClick={onSuno.copy}
-              className="flex-1 rounded-full py-1.5 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">
-              📋 가사 복사
-            </button>
-            <button onClick={() => window.open("https://suno.com", "_blank")}
-              className="flex-1 rounded-full py-1.5 tt11 font-black bg-gradient-to-r from-violet-500 to-purple-500 text-white active:scale-95">
-              🎤 Suno에서 열기 →
-            </button>
+        <div className="rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-pink-500 p-0.5 shadow-lg">
+          <div className="rounded-2xl bg-white p-3">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-2xl">🎵</span>
+              <div className="tt13 font-black bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-transparent">내 가사로 진짜 노래 만들기</div>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={onSuno.copy}
+                className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">
+                📋 가사 복사
+              </button>
+              <button onClick={() => window.open("https://suno.com", "_blank")}
+                className="flex-[2] rounded-full py-2 tt11 font-black bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white active:scale-95 shadow-md animate-pulse">
+                🎤 Suno에서 노래 만들기
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -3185,6 +3197,11 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
         {loading ? "AI가 채점 중…" : "🎼 AI 평가 받기 (100점)"}
       </button>
+      {!fb && (
+        <p className={`tt11 text-center mt-2 font-bold text-violet-500 ${loading ? "animate-pulse" : ""}`}>
+          🎤 평가 후 내 가사로 노래를 만들어요
+        </p>
+      )}
 
       {fb && <>
         <GradeResult fb={fb} onSuno={{ copy: () => navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("직접 선택해서 복사해 주세요.")) }} />
