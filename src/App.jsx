@@ -612,6 +612,25 @@ function PlayerScreen({ go, ctx }) {
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const [segmentPlaying, setSegmentPlaying] = useState(false);
   const segmentTimerRef = React.useRef(null);
+  const segmentAudioRef = React.useRef(null);
+
+  // 구간 듣기 토글 시 자동 재생/멈춤
+  React.useEffect(() => {
+    if (!song?.audioFile) return;
+    const a = segmentAudioRef.current;
+    if (!a) return;
+    if (segmentPlaying) {
+      try { a.currentTime = song.lyricStart || 0; } catch(e){}
+      a.play().catch(() => {});
+      segmentTimerRef.current = setTimeout(() => {
+        try { a.pause(); a.currentTime = song.lyricStart || 0; } catch(e){}
+        setSegmentPlaying(false);
+      }, 20000);
+    } else {
+      try { a.pause(); } catch(e){}
+      if (segmentTimerRef.current) { clearTimeout(segmentTimerRef.current); segmentTimerRef.current = null; }
+    }
+  }, [segmentPlaying]);
   const audioRef = React.useRef(null);
 
   // 음원 파일 재생/일시정지
@@ -759,27 +778,46 @@ function PlayerScreen({ go, ctx }) {
             </div>
           ))}
           {/* 듣기 버튼 행 */}
-          <div className="flex gap-2 mt-3 justify-center">
+          <div className="mt-3 space-y-2">
+            <div className="flex gap-2 justify-center">
+              {(song.audioFile || song.youtubeId) && (
+                <button onClick={() => {
+                  if (song.audioFile) {
+                    setSegmentPlaying((p) => !p);
+                  } else {
+                    handleSegmentYouTube();
+                  }
+                }}
+                  className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 tt12 font-bold active:scale-95 shadow ${segmentPlaying ? "bg-pink-400 text-white" : "bg-red-500 text-white"}`}>
+                  {segmentPlaying ? "⏹ 멈추기" : "▶ 구간 듣기"}
+                </button>
+              )}
+              {song.lyricLines.length > 0 && (
+                <button onClick={handleSentenceTTS}
+                  className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 tt12 font-bold active:scale-95 shadow
+                    ${ttsPlaying ? "bg-pink-400 text-white" : "bg-white/20 text-white border border-white/40"}`}>
+                  {ttsPlaying ? "⏹ 중지" : "🔊 문장 듣기"}
+                </button>
+              )}
+            </div>
+            {/* 구간 듣기 펼침 영역 */}
             {song.audioFile && (
-              <div className="w-full flex flex-col items-center gap-1">
-                <audio id="segment-audio" controls src={`${song.audioFile}#t=${song.lyricStart || 0}`}
-                  className="w-full max-w-xs"
-                  style={{height:36}} />
-                <p className="tt10 text-white/60">▶ 버튼을 누르면 가사 시점부터 재생됩니다</p>
-              </div>
-            )}
-            {!song.audioFile && song.youtubeId && (
-              <button onClick={handleSegmentYouTube}
-                className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
-                ▶ 구간 듣기
-              </button>
-            )}
-            {song.lyricLines.length > 0 && (
-              <button onClick={handleSentenceTTS}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 tt12 font-bold active:scale-95 shadow
-                  ${ttsPlaying ? "bg-pink-400 text-white" : "bg-white/20 text-white border border-white/40"}`}>
-                {ttsPlaying ? "⏹ 중지" : "🔊 문장 듣기"}
-              </button>
+              <>
+                <audio ref={segmentAudioRef} src={`${song.audioFile}#t=${song.lyricStart || 0}`}
+                  onEnded={() => setSegmentPlaying(false)} style={{display:"none"}} />
+                {segmentPlaying && (
+                  <div className="flex items-center justify-center gap-3 bg-white/10 rounded-xl p-2">
+                    <button onClick={() => {
+                      const a = segmentAudioRef.current; if (!a) return;
+                      try { a.currentTime = song.lyricStart || 0; } catch(e){}
+                      a.play().catch(() => {});
+                    }} className="rounded-full w-8 h-8 bg-white/20 text-white tt12 font-bold active:scale-90" title="처음부터">🔄</button>
+                    <div className="tt11 text-white/80 animate-pulse">♪ 재생 중…</div>
+                    <button onClick={() => setSegmentPlaying(false)}
+                      className="rounded-full w-8 h-8 bg-white/20 text-white tt12 font-bold active:scale-90" title="멈추기">⏹</button>
+                  </div>
+                )}
+              </>
             )}
           </div>
           {!song.audioFile && song.youtubeId && (
