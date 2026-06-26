@@ -109,7 +109,7 @@ const SONGS = [
     cover: "from-pink-300 via-rose-300 to-purple-300",
     youtubeId: "yCvSR4lSqTg", lyricStart: 56,
     audioFile: "/audio/seventeen-ready-to-love.mp3",
-    lyricLines: ["내 손을 잡아", "널 위해 달릴게", "숨이 차오를 듯이"],
+    lyricLines: ["세상의 반대로 Run away", "내 손을 잡아", "계속 Run away", "이제 날 믿어"],
     collocations: [{ id: "svt-son-jabda", word: "손을 잡다", body: "손", meaning: "사랑을 시작하며 함께하다", category: "관계 연어", level: "초급",
       meaningDetail: "좋아하는 사람에게 마음을 고백하고 더 가까워지고 싶다는 마음을 나타내는 표현",
       situationDetail: "친구 이상의 감정이 커져 사랑을 고백하고 함께하고 싶은 상황",
