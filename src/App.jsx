@@ -83,6 +83,40 @@ const SONGS = [
       exampleDetail: "\"돌아서지 마. 내 손을 잡아. 너 없는 나는 상상할 수 없어.\"",
       dialogueDetail: [{ s: "A", t: "왠지 네가 떠날 것 같아 불안해." }, { s: "B", t: "돌아서지 마. 내 손을 잡아. 너만 보고 있을게." }]
     }],
+      translations: {
+        en: {
+          meaning: "Begin love and walk together",
+          meaningDetail: "An expression of holding onto a person about to leave, conveying intense love that will not let them go",
+          situation: "When one wants to hold back someone about to leave and strongly express their love",
+          listener: "A loved one whose heart is wavering or who is about to leave",
+          attitude: "A person whose love is so strong they cannot bear to let the other go",
+          example: "\"Don't turn away. Take my hand. I can't imagine myself without you.\"",
+        },
+        zh: {
+          meaning: "开始爱情并一同前行",
+          meaningDetail: "挽留即将离去的对方,表达不愿放手的强烈爱意的表达",
+          situation: "想挽留即将离去的对方,强烈表达自己爱意的情境",
+          listener: "心意动摇或正要离开的、所爱的对象",
+          attitude: "对对方爱意深厚,绝不愿放手的人",
+          example: "\"别转身。牵我的手。没有你,我无法想象自己。\"",
+        },
+        ja: {
+          meaning: "愛を始めて共に歩む",
+          meaningDetail: "去ろうとする相手を引き留め、決して手放したくない強い愛を伝える表現",
+          situation: "去ろうとする相手を引き留め、自分の愛を強く伝えたい状況",
+          listener: "心が揺れている、または去ろうとしている、愛する相手",
+          attitude: "相手への愛が強く、絶対に手放したくない人",
+          example: "「振り返らないで。私の手を取って。君なしの自分は考えられない。」",
+        },
+        vi: {
+          meaning: "Bắt đầu tình yêu và cùng nhau bước đi",
+          meaningDetail: "Cách diễn đạt giữ lại người sắp rời đi, thể hiện tình yêu mãnh liệt không muốn buông tay",
+          situation: "Khi muốn giữ lại người sắp rời đi và thể hiện mạnh mẽ tình yêu của mình",
+          listener: "Người yêu đang dao động hoặc sắp rời đi",
+          attitude: "Người có tình yêu mãnh liệt, không thể buông tay đối phương",
+          example: "\"Đừng quay đi. Nắm tay anh. Anh không thể tưởng tượng bản thân không có em.\"",
+        },
+      },
   },
   {
     id: "bts-jetlag", situation: "growth",
@@ -118,6 +152,40 @@ const SONGS = [
       exampleDetail: "\"이제 친구로만 지내고 싶지 않아. 내 손을 잡고 함께 가 줘.\"",
       dialogueDetail: [{ s: "A", t: "나 이제 친구로는 부족해." }, { s: "B", t: "그럼 내 손 잡아. 우리 같이 가자." }]
     }],
+      translations: {
+        en: {
+          meaning: "Begin love and walk together",
+          meaningDetail: "An expression of confessing one's feelings to someone special and wanting to grow closer",
+          situation: "When feelings have grown beyond friendship and one wants to confess love and be together",
+          listener: "Someone the speaker hopes will accept their feelings and walk together",
+          attitude: "A person ready to begin love and walk together with the other",
+          example: "\"I don't want to stay just friends anymore. Take my hand and let's go together.\"",
+        },
+        zh: {
+          meaning: "开始爱情并一同前行",
+          meaningDetail: "向喜欢的人表白心意,希望更靠近彼此的表达",
+          situation: "情感超越友情,想要告白并与对方在一起的情境",
+          listener: "希望对方接受自己心意并一同前行的相对",
+          attitude: "已准备好开始恋爱,想与对方携手同行的人",
+          example: "\"我不想再只做朋友了。牵我的手,一起走吧。\"",
+        },
+        ja: {
+          meaning: "愛を始めて共に歩む",
+          meaningDetail: "好きな人に思いを告白し、もっと近づきたい気持ちを表す表現",
+          situation: "友達以上の感情が芽生え、愛を告白して一緒にいたい状況",
+          listener: "話し手の気持ちを受け入れ、一緒にいてほしい相手",
+          attitude: "愛を始める準備ができ、相手と共に歩みたい人",
+          example: "「もう友達ではいられない。私の手を取って、一緒に行こう。」",
+        },
+        vi: {
+          meaning: "Bắt đầu tình yêu và cùng nhau bước đi",
+          meaningDetail: "Cách diễn đạt thể hiện việc tỏ tình và muốn trở nên thân thiết hơn",
+          situation: "Khi tình cảm vượt quá tình bạn và muốn tỏ tình để được ở bên nhau",
+          listener: "Người mà người nói mong sẽ chấp nhận tình cảm và cùng đi",
+          attitude: "Người đã sẵn sàng bắt đầu tình yêu và muốn cùng đối phương bước tới",
+          example: "\"Tôi không muốn chỉ là bạn nữa. Nắm tay tôi, cùng đi nào.\"",
+        },
+      },
   },
   {
     id: "bts-my-universe", situation: "love",
@@ -134,6 +202,40 @@ const SONGS = [
       exampleDetail: "\"우리가 멀리 있어도 괜찮아. 내 손을 잡고 함께 가자.\"",
       dialogueDetail: [{ s: "A", t: "우리가 함께하기 어렵다고들 말해." }, { s: "B", t: "그래도 괜찮아. 내 손을 잡아. 우리는 함께 갈 수 있어." }]
     }],
+      translations: {
+        en: {
+          meaning: "Overcome difficulties together",
+          meaningDetail: "An expression of transcending distance or hardship by trusting each other and going forward together",
+          situation: "When one wants to overcome challenges with a loved one even though they live in different worlds",
+          listener: "A precious person who brightens the speaker's world and gives them strength",
+          attitude: "A person who treasures the other as their universe and wants to overcome trials together",
+          example: "\"It's okay even if we're far apart. Take my hand and let's go together.\"",
+        },
+        zh: {
+          meaning: "共同克服困难",
+          meaningDetail: "超越艰难处境或距离,相信彼此并一同前行的表达",
+          situation: "即使身处不同世界,也想与所爱之人共同克服困难的情境",
+          listener: "照亮说话者的世界、成为其力量的珍贵对象",
+          attitude: "将对方视为自己的宇宙般珍视,愿与之共渡难关的人",
+          example: "\"即使我们相隔遥远也没关系。牵我的手,我们一起走吧。\"",
+        },
+        ja: {
+          meaning: "困難を共に乗り越える",
+          meaningDetail: "困難な状況や距離を越え、互いを信じて共に進もうとする気持ちを表す表現",
+          situation: "違う世界にいても、愛する人と困難を乗り越えていきたい状況",
+          listener: "話し手の世界を明るく照らし、力になってくれる大切な相手",
+          attitude: "相手を自分の宇宙のように大切にし、共に試練を乗り越えたい人",
+          example: "「離れていても大丈夫。手を取って、一緒に行こう。」",
+        },
+        vi: {
+          meaning: "Cùng nhau vượt qua khó khăn",
+          meaningDetail: "Cách diễn đạt vượt qua hoàn cảnh khó khăn hay khoảng cách, tin tưởng nhau và cùng tiến bước",
+          situation: "Khi muốn cùng người yêu vượt qua khó khăn dù ở hai thế giới khác nhau",
+          listener: "Người quý giá làm sáng thế giới của người nói và trở thành sức mạnh",
+          attitude: "Người trân trọng đối phương như vũ trụ của mình và muốn cùng vượt qua thử thách",
+          example: "\"Dù chúng ta cách xa nhau cũng không sao. Nắm tay anh, cùng đi nào.\"",
+        },
+      },
   },
   {
     id: "seventeen-damage", situation: "love",
@@ -150,6 +252,40 @@ const SONGS = [
       exampleDetail: "\"네가 나를 믿는다면, 내 손을 잡고 함께 와 줘.\"",
       dialogueDetail: [{ s: "A", t: "나도 네 마음이 느껴지지만 조금 망설여져." }, { s: "B", t: "나를 믿는다면 내 손을 잡아줘." }]
     }],
+      translations: {
+        en: {
+          meaning: "Begin love and walk together",
+          meaningDetail: "An expression of revealing feelings, accepting mutual attraction, and wanting to grow closer",
+          situation: "When mutual attraction grows and one asks the other to trust them and come together",
+          listener: "Someone attracted to the speaker but still hesitating a little",
+          attitude: "A person strongly drawn to the other and wanting to grow closer",
+          example: "\"If you believe in me, take my hand and come with me.\"",
+        },
+        zh: {
+          meaning: "开始爱情并一同前行",
+          meaningDetail: "向喜欢的人表达心意,接受彼此的吸引并希望靠近对方的表达",
+          situation: "彼此互相吸引的心情加深,请求对方相信自己并一同前行的情境",
+          listener: "对说话者有好感但仍稍有犹豫的相对",
+          attitude: "对对方有强烈吸引,想要更靠近对方的人",
+          example: "\"如果你相信我,就牵我的手一起走吧。\"",
+        },
+        ja: {
+          meaning: "愛を始めて共に歩む",
+          meaningDetail: "好きな人に気持ちを表し、互いの惹かれ合いを受け入れて近づきたい表現",
+          situation: "互いに惹かれる気持ちが強くなり、相手に自分を信じて一緒に来てほしいと願う状況",
+          listener: "話し手に惹かれているが、まだ少し迷っている相手",
+          attitude: "相手に強く惹かれ、もっと近づきたい人",
+          example: "「私を信じてくれるなら、手を取って一緒に来て。」",
+        },
+        vi: {
+          meaning: "Bắt đầu tình yêu và cùng nhau bước đi",
+          meaningDetail: "Cách diễn đạt bày tỏ tình cảm, chấp nhận sự rung động lẫn nhau và muốn gần gũi hơn",
+          situation: "Khi sự rung động lẫn nhau lớn dần và muốn đối phương tin tưởng để cùng đi",
+          listener: "Người có cảm tình với người nói nhưng vẫn còn chút do dự",
+          attitude: "Người có cảm xúc mạnh mẽ với đối phương và muốn gần gũi hơn",
+          example: "\"Nếu em tin anh, hãy nắm tay anh và cùng đi.\"",
+        },
+      },
   },
   {
     id: "bts-i-need-u", situation: "parting",
@@ -219,6 +355,40 @@ const SONGS = [
       exampleDetail: "\"많이 돌아왔지만 이제 네 손을 잡고 다시 시작하고 싶어.\"",
       dialogueDetail: [{ s: "A", t: "다시 너에게 돌아가고 싶어." }, { s: "B", t: "늦지 않았어. 내 손 잡아. 다시 시작하자." }]
     }],
+      translations: {
+        en: {
+          meaning: "Overcome difficulties together",
+          meaningDetail: "An expression of returning after hard times and wandering, trusting each other and starting over together",
+          situation: "When one wants to come back to a person who recognized them and restore the relationship",
+          listener: "The one who recognized the speaker and became their comfort and light in dark times",
+          attitude: "A person who has come through hard times and wants to return to mend the relationship",
+          example: "\"I've come a long way back. Now I want to take your hand and start again.\"",
+        },
+        zh: {
+          meaning: "共同克服困难",
+          meaningDetail: "经过艰难时光和迷茫,重新相信彼此并一起再出发的表达",
+          situation: "想回到曾认识真正自己的对方身边,修复关系的情境",
+          listener: "曾认识真正的说话者,在黑暗时光里成为安慰与光的人",
+          attitude: "经历艰难时光后,想回到对方身边修复关系的人",
+          example: "\"我走了很远才回来。现在想牵你的手,重新开始。\"",
+        },
+        ja: {
+          meaning: "困難を共に乗り越える",
+          meaningDetail: "つらい時間と彷徨を経て、再び信じ合い一緒に進もうとする気持ちを表す表現",
+          situation: "自分を認めてくれた相手に再び近づき、関係を取り戻したい状況",
+          listener: "話し手を理解し、暗い時間の中で慰めと光になってくれた相手",
+          attitude: "つらい時間を経て相手のもとへ戻り、関係をやり直したい人",
+          example: "「ずいぶん遠回りしたけれど、今は君の手を取ってやり直したい。」",
+        },
+        vi: {
+          meaning: "Cùng nhau vượt qua khó khăn",
+          meaningDetail: "Cách diễn đạt sau thời gian khó khăn và lạc lối, lại tin tưởng nhau và cùng bắt đầu lại",
+          situation: "Khi muốn quay lại với người đã hiểu mình và hàn gắn mối quan hệ",
+          listener: "Người đã nhận ra người nói và trở thành niềm an ủi, ánh sáng trong thời gian tối tăm",
+          attitude: "Người đã trải qua thời gian khó khăn và muốn quay lại để làm lại mối quan hệ",
+          example: "\"Anh đã đi đường vòng rất xa. Giờ anh muốn nắm tay em và bắt đầu lại.\"",
+        },
+      },
   },
   {
     id: "jhope-on-the-street", situation: "growth",
@@ -776,7 +946,7 @@ function PlayerScreen({ go, ctx }) {
   function handleSegmentYouTube() {
     if (!song.youtubeId) return;
     const t = song.lyricStart || 0;
-    window.open(`https://www.youtube.com/embed/${song.youtubeId}?autoplay=1&start=${t}&rel=0`, "_blank");
+    window.open(`https://www.youtube-nocookie.com/embed/${song.youtubeId}?autoplay=1&start=${t}&rel=0&cc_load_policy=1&cc_lang_pref=ko&hl=ko`, "_blank");
   }
 
   const sameSituation = SONGS.filter((s) => s.situation === song.situation);
@@ -871,7 +1041,7 @@ function PlayerScreen({ go, ctx }) {
       </div>
       <div className="flex items-center justify-center mt-3">
         <button onClick={() => {
-          if (song.youtubeId) window.open(`https://www.youtube.com/embed/${song.youtubeId}?autoplay=1&rel=0`, "_blank");
+          if (song.youtubeId) window.open(`https://www.youtube-nocookie.com/embed/${song.youtubeId}?autoplay=1&rel=0&cc_load_policy=1&cc_lang_pref=ko&hl=ko`, "_blank");
           else alert("이 곡의 YouTube 영상이 아직 등록되지 않았습니다.");
         }}
           className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
@@ -915,6 +1085,9 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
   const hasNext = song.collocations.length > 1;
   const nextIdx = (idx + 1) % song.collocations.length;
   const marked = bookmarks.includes(c.id);
+  const [l1, setL1] = useState("ko");
+  const tr = (c.translations && c.translations[l1]) || null;
+  const showInLang = (koVal, key) => l1 === "ko" || !tr ? koVal : tr[key];
 
   return (
     <div className="px-5 pt-3 pb-24">
@@ -937,20 +1110,36 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
         </div>
 
         <div className="mt-3">
+          {tr && (
+            <div className="flex gap-1 flex-wrap mb-2">
+              {[
+                { code: "ko", flag: "🇰🇷", label: "한" },
+                { code: "en", flag: "🇺🇸", label: "EN" },
+                { code: "zh", flag: "🇨🇳", label: "中" },
+                { code: "ja", flag: "🇯🇵", label: "日" },
+                { code: "vi", flag: "🇻🇳", label: "VI" },
+              ].map((l) => (
+                <button key={l.code} onClick={() => setL1(l.code)}
+                  className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${l1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
+                  {l.flag} {l.label}
+                </button>
+              ))}
+            </div>
+          )}
           {(c.meaningDetail || full.meaning) ? (
             <Row icon="💡" label="의미">
-              <div className="font-black text-purple-800 text-base">{c.meaning || full.meaning}</div>
+              <div className="font-black text-purple-800 text-base">{showInLang(c.meaning || full.meaning, "meaning")}</div>
               {(c.meaningDetail || full.meaningDetail) && (
-                <div className="italic text-purple-600 tt11 mt-1">{c.meaningDetail || full.meaningDetail}</div>
+                <div className="italic text-purple-600 tt11 mt-1">{showInLang(c.meaningDetail || full.meaningDetail, "meaningDetail")}</div>
               )}
             </Row>
           ) : (
             <Row icon="💡" label="의미">{c.meaning}</Row>
           )}
-          <Row icon="💗" label="상황">{c.situationDetail || full.situation}</Row>
-          <Row icon="🎧" label="듣는 사람">{c.listenerDetail || full.listener}</Row>
-          <Row icon="🙂" label="말하는 사람">{c.attitudeDetail || full.attitude}</Row>
-          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문">{c.exampleDetail || full.contextExample}</Row>}
+          <Row icon="💗" label="상황">{showInLang(c.situationDetail || full.situation, "situation")}</Row>
+          <Row icon="🎧" label="듣는 사람">{showInLang(c.listenerDetail || full.listener, "listener")}</Row>
+          <Row icon="🙂" label="말하는 사람">{showInLang(c.attitudeDetail || full.attitude, "attitude")}</Row>
+          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문">{showInLang(c.exampleDetail || full.contextExample, "example")}</Row>}
           {((c.dialogueDetail && c.dialogueDetail.length > 0) || (full.dialogue && full.dialogue.length > 0)) && (
             <div className="mt-2 rounded-xl bg-purple-50 p-2.5">
               <div className="flex items-center gap-1 mb-1.5">
