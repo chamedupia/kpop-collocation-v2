@@ -740,42 +740,12 @@ function PlayerScreen({ go, ctx }) {
           {/* 듣기 버튼 행 */}
           <div className="flex gap-2 mt-3 justify-center">
             {song.audioFile && (
-              <>
-                <audio id="segment-audio" src={song.audioFile} preload="auto" 
-                  style={{position:"absolute", left:"-9999px", width:1, height:1}}
-                  onEnded={() => setSegmentPlaying(false)} />
-                <button onClick={() => {
-                  const audio = document.getElementById("segment-audio");
-                  if (!audio) { alert("오디오를 찾을 수 없습니다."); return; }
-                  const startAt = song.lyricStart || 0;
-                  if (segmentPlaying) {
-                    try { audio.pause(); audio.currentTime = startAt; } catch(e){}
-                    if (segmentTimerRef.current) { clearTimeout(segmentTimerRef.current); segmentTimerRef.current = null; }
-                    setSegmentPlaying(false);
-                  } else {
-                    // 사용자 인터랙션 직후 즉시 play 호출 (삼성 인터넷 대응)
-                    const playPromise = audio.play();
-                    setSegmentPlaying(true);
-                    if (playPromise && playPromise.then) {
-                      playPromise.then(() => {
-                        // 재생 성공 후 시점 이동
-                        try { audio.currentTime = startAt; } catch(e){}
-                      }).catch((e) => {
-                        setSegmentPlaying(false);
-                        alert("재생할 수 없습니다: " + (e.message || e.name || "알 수 없는 오류"));
-                      });
-                    }
-                    segmentTimerRef.current = setTimeout(() => {
-                      try { audio.pause(); audio.currentTime = startAt; } catch(e){}
-                      setSegmentPlaying(false);
-                      segmentTimerRef.current = null;
-                    }, 20000);
-                  }
-                }}
-                  className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
-                  {segmentPlaying ? "⏹ 멈추기" : "▶ 구간 듣기"}
-                </button>
-              </>
+              <div className="w-full flex flex-col items-center gap-1">
+                <audio id="segment-audio" controls src={`${song.audioFile}#t=${song.lyricStart || 0}`}
+                  className="w-full max-w-xs"
+                  style={{height:36}} />
+                <p className="tt10 text-white/60">▶ 버튼을 누르면 가사 시점부터 재생됩니다</p>
+              </div>
             )}
             {!song.audioFile && song.youtubeId && (
               <button onClick={handleSegmentYouTube}
