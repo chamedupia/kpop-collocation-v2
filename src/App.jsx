@@ -75,7 +75,14 @@ const SONGS = [
     youtubeId: "_hFarg-Obuc", lyricStart: 62,
     audioFile: "/audio/treasure-saranghae.mp3",
     lyricLines: ["나만 바라봐 뜨거운 태양처럼", "맘대로 내 맘을 뒤집어 놓고", "돌아서지 마! 내 손을 잡아"],
-    collocations: [{ id: "treasure-son-jabda", word: "손을 잡다", body: "손", meaning: "관계 연어. 함께하겠다는 마음을 표현", category: "관계 연어", level: "초급" }],
+    collocations: [{ id: "treasure-son-jabda", word: "손을 잡다", body: "손", meaning: "사랑을 시작하며 함께하다", category: "관계 연어", level: "초급",
+      meaningDetail: "좋아하는 사람에게 마음을 고백하고, 앞으로도 함께 사랑을 이어 가고 싶다는 마음을 나타내는 표현",
+      situationDetail: "사랑을 알게 해 준 상대에게 고마움과 사랑을 고백하고 계속 함께하고 싶은 상황",
+      listenerDetail: "말하는 사람의 세상을 밝게 바꾸어 주고 사랑을 느끼게 해 준 상대",
+      attitudeDetail: "상대를 만나 사랑을 알게 되었고, 앞으로도 함께하고 싶은 사람",
+      exampleDetail: "\"너를 만나 내 마음이 밝아졌어. 앞으로도 내 손을 잡고 함께해 줘.\"",
+      dialogueDetail: [{ s: "A", t: "너 때문에 내 세상이 밝아졌어." }, { s: "B", t: "우리 앞으로도 손잡고 함께하자." }]
+    }],
   },
   {
     id: "bts-jetlag", situation: "growth",
@@ -103,7 +110,14 @@ const SONGS = [
     youtubeId: "yCvSR4lSqTg", lyricStart: 56,
     audioFile: "/audio/seventeen-ready-to-love.mp3",
     lyricLines: ["내 손을 잡아", "널 위해 달릴게", "숨이 차오를 듯이"],
-    collocations: [{ id: "svt-son-jabda", word: "손을 잡다", body: "손", meaning: "관계 연어. 함께하겠다는 마음을 표현", category: "관계 연어", level: "초급" }],
+    collocations: [{ id: "svt-son-jabda", word: "손을 잡다", body: "손", meaning: "사랑을 시작하며 함께하다", category: "관계 연어", level: "초급",
+      meaningDetail: "좋아하는 사람에게 마음을 고백하고 더 가까워지고 싶다는 마음을 나타내는 표현",
+      situationDetail: "친구 이상의 감정이 커져 사랑을 고백하고 함께하고 싶은 상황",
+      listenerDetail: "말하는 사람의 마음을 받아 주고 함께해 주기를 바라는 상대",
+      attitudeDetail: "사랑을 시작할 준비가 되었고 상대와 함께 가고 싶은 사람",
+      exampleDetail: "\"이제 친구로만 지내고 싶지 않아. 내 손을 잡고 함께 가 줘.\"",
+      dialogueDetail: [{ s: "A", t: "나 이제 친구로는 부족해." }, { s: "B", t: "그럼 내 손 잡아. 우리 같이 가자." }]
+    }],
   },
   {
     id: "bts-my-universe", situation: "love",
@@ -112,7 +126,14 @@ const SONGS = [
     cover: "from-pink-300 via-rose-300 to-purple-300",
     youtubeId: "3YqPKLZF_WU", lyricStart: 99,
     lyricLines: ["너와 함께 날아가 (가)", "When I'm without you I'm crazy", "자 어서 내 손을 잡아 (아)", "We are made of each other baby"],
-    collocations: [],
+    collocations: [{ id: "mu-son-jabda", word: "손을 잡다", body: "손", meaning: "어려움을 함께 이겨내다", category: "관계 연어", level: "초급",
+      meaningDetail: "힘든 상황이나 거리감을 넘어 서로를 믿고 함께 가자는 마음을 나타내는 표현",
+      situationDetail: "서로 다른 세계에 있어도 사랑하는 사람과 어려움을 이겨 내고 싶은 상황",
+      listenerDetail: "말하는 사람의 세상을 밝게 비추고 힘이 되어 주는 소중한 상대",
+      attitudeDetail: "상대를 자신의 우주처럼 소중하게 여기며 함께 시련을 넘어가고 싶은 사람",
+      exampleDetail: "\"우리가 멀리 있어도 괜찮아. 내 손을 잡고 함께 가자.\"",
+      dialogueDetail: [{ s: "A", t: "우리가 함께하기 어렵다고들 말해." }, { s: "B", t: "그래도 괜찮아. 내 손을 잡아. 우리는 함께 갈 수 있어." }]
+    }],
   },
   {
     id: "seventeen-damage", situation: "love",
@@ -121,7 +142,14 @@ const SONGS = [
     cover: "from-pink-300 via-rose-300 to-purple-300",
     youtubeId: "vNbsR3AOzxY", lyricStart: 157,
     lyricLines: ["내 손을 잡아줘 너 또한 날 믿는다면", "맘에 꽃 피듯이 너와 난 반드시 영원히 빛날 테니"],
-    collocations: [],
+    collocations: [{ id: "damage-son-jabda", word: "손을 잡다", body: "손", meaning: "사랑을 시작하며 함께하다", category: "관계 연어", level: "초급",
+      meaningDetail: "좋아하는 사람에게 마음을 표현하고, 서로의 끌림을 받아들이며 더 가까워지고 싶다는 마음을 나타내는 표현",
+      situationDetail: "서로에게 끌리는 마음이 커져 상대에게 자신을 믿고 함께해 달라고 말하는 상황",
+      listenerDetail: "말하는 사람에게 끌리고 있지만 아직 조금 망설이는 상대",
+      attitudeDetail: "상대에게 강하게 끌리고, 상대와 더 가까워지고 싶은 사람",
+      exampleDetail: "\"네가 나를 믿는다면, 내 손을 잡고 함께 와 줘.\"",
+      dialogueDetail: [{ s: "A", t: "나도 네 마음이 느껴지지만 조금 망설여져." }, { s: "B", t: "나를 믿는다면 내 손을 잡아줘." }]
+    }],
   },
   {
     id: "bts-i-need-u", situation: "parting",
@@ -183,7 +211,14 @@ const SONGS = [
     mood: "설렘과 함께하기", emoji: "🤝",
     cover: "from-purple-300 via-pink-300 to-rose-300",
     lyricLines: ["그 손 내가 잡아도 될까", "너라는 세상 속으로"],
-    collocations: [{ id: "mir-son", word: "손을 잡다", body: "손", meaning: "상대에게 다가가 함께하고 싶다는 마음을 표현", category: "관계 연어", level: "초급" }],
+    collocations: [{ id: "mir-son", word: "손을 잡다", body: "손", meaning: "어려움을 함께 이겨내다", category: "관계 연어", level: "초급",
+      meaningDetail: "힘든 시간과 방황을 지나, 서로를 믿고 다시 함께 가자는 마음을 나타내는 표현",
+      situationDetail: "자신을 알아봐 준 상대에게 다시 다가가 관계를 회복하고 싶은 상황",
+      listenerDetail: "말하는 사람을 알아봐 주고, 어두운 시간 속에서 위로와 빛이 되어 준 상대",
+      attitudeDetail: "힘든 시간을 지나 상대에게 돌아가고, 관계를 다시 바로잡고 싶은 사람",
+      exampleDetail: "\"많이 돌아왔지만 이제 네 손을 잡고 다시 시작하고 싶어.\"",
+      dialogueDetail: [{ s: "A", t: "다시 너에게 돌아가고 싶어." }, { s: "B", t: "늦지 않았어. 내 손 잡아. 다시 시작하자." }]
+    }],
   },
   {
     id: "jhope-on-the-street", situation: "growth",
@@ -622,13 +657,8 @@ function PlayerScreen({ go, ctx }) {
     if (segmentPlaying) {
       try { a.currentTime = song.lyricStart || 0; } catch(e){}
       a.play().catch(() => {});
-      segmentTimerRef.current = setTimeout(() => {
-        try { a.pause(); a.currentTime = song.lyricStart || 0; } catch(e){}
-        setSegmentPlaying(false);
-      }, 20000);
     } else {
       try { a.pause(); } catch(e){}
-      if (segmentTimerRef.current) { clearTimeout(segmentTimerRef.current); segmentTimerRef.current = null; }
     }
   }, [segmentPlaying]);
   const audioRef = React.useRef(null);
@@ -806,15 +836,19 @@ function PlayerScreen({ go, ctx }) {
                 <audio ref={segmentAudioRef} src={`${song.audioFile}#t=${song.lyricStart || 0}`}
                   onEnded={() => setSegmentPlaying(false)} style={{display:"none"}} />
                 {segmentPlaying && (
-                  <div className="flex items-center justify-center gap-3 bg-white/10 rounded-xl p-2">
+                  <div className="flex items-center justify-center gap-4 bg-white/10 rounded-xl p-2">
                     <button onClick={() => {
                       const a = segmentAudioRef.current; if (!a) return;
                       try { a.currentTime = song.lyricStart || 0; } catch(e){}
                       a.play().catch(() => {});
-                    }} className="rounded-full w-8 h-8 bg-white/20 text-white tt12 font-bold active:scale-90" title="처음부터">🔄</button>
+                    }} className="flex items-center gap-1 rounded-full px-3 py-1 bg-white/20 text-white tt11 font-bold active:scale-90">
+                      🔄 다시 듣기
+                    </button>
                     <div className="tt11 text-white/80 animate-pulse">♪ 재생 중…</div>
                     <button onClick={() => setSegmentPlaying(false)}
-                      className="rounded-full w-8 h-8 bg-white/20 text-white tt12 font-bold active:scale-90" title="멈추기">⏹</button>
+                      className="flex items-center gap-1 rounded-full px-3 py-1 bg-white/20 text-white tt11 font-bold active:scale-90">
+                      ⏹ 멈춤
+                    </button>
                   </div>
                 )}
               </>
@@ -892,7 +926,6 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
           <AlbumCover song={song} className="w-14 h-14 rounded-xl text-2xl" />
           <div className="flex-1">
             <div className="tt10 text-purple-600">{song.title} · {song.artist}</div>
-            <Pill className="bg-pink-100 text-pink-500 mt-1">오늘의 연어</Pill>
             <div className="text-2xl font-black text-pink-500 leading-tight">{c.word}</div>
 
           </div>
@@ -904,10 +937,36 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
         </div>
 
         <div className="mt-3">
-          <Row icon="💡" label="의미">{full.meaning || c.meaning}</Row>
-          <Row icon="💗" label="상황">{full.situation}</Row>
-          <Row icon="🎧" label="듣는 사람">{full.listener}</Row>
-          <Row icon="🙂" label="말하는 사람">{full.attitude}</Row>
+          {(c.meaningDetail || full.meaning) ? (
+            <Row icon="💡" label="의미">
+              <div className="font-black text-purple-800 text-base">{c.meaning || full.meaning}</div>
+              {(c.meaningDetail || full.meaningDetail) && (
+                <div className="italic text-purple-600 tt11 mt-1">{c.meaningDetail || full.meaningDetail}</div>
+              )}
+            </Row>
+          ) : (
+            <Row icon="💡" label="의미">{c.meaning}</Row>
+          )}
+          <Row icon="💗" label="상황">{c.situationDetail || full.situation}</Row>
+          <Row icon="🎧" label="듣는 사람">{c.listenerDetail || full.listener}</Row>
+          <Row icon="🙂" label="말하는 사람">{c.attitudeDetail || full.attitude}</Row>
+          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문">{c.exampleDetail || full.contextExample}</Row>}
+          {((c.dialogueDetail && c.dialogueDetail.length > 0) || (full.dialogue && full.dialogue.length > 0)) && (
+            <div className="mt-2 rounded-xl bg-purple-50 p-2.5">
+              <div className="flex items-center gap-1 mb-1.5">
+                <span>💬</span>
+                <span className="tt11 font-bold text-purple-600">대화 예문</span>
+              </div>
+              <div className="space-y-1">
+                {(c.dialogueDetail || full.dialogue).map((turn, i) => (
+                  <div key={i} className="flex gap-2 tt12 leading-relaxed">
+                    <span className={`font-black shrink-0 ${turn.s === "A" ? "text-pink-500" : "text-blue-500"}`}>{turn.s}</span>
+                    <span className="text-purple-800">{turn.t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1751,6 +1810,7 @@ const COLLOCATIONS = [
   { id: 1, expression: "손을 잡다", expressionType: "협의적 연어",
     meaning: "실제로 손을 맞잡거나, 함께하며 서로를 지지한다는 뜻으로 쓰인다.", example: "헤어지기 아쉬워서 우리는 잠깐 손을 잡았어.", level: "초급",
     situation: "관계를 시작하거나 함께하기로 약속할 때", listener: "떠난 상대 또는 그리움의 대상", attitude: "이별이나 관계의 상실을 겪는 화자",
+    contextExample: "이별이나 상실의 상황에서, 떠난 상대 또는 그리움의 대상에게 — \"다시 만나면 그때는 꼭 네 손을 잡고 놓지 않을게.\"",
     dialogue: [
       { s: "A", t: "나 요즘 너무 힘들어." },
       { s: "B", t: "괜찮아. 내가 네 손을 잡아 줄게." },
@@ -1770,6 +1830,7 @@ const COLLOCATIONS = [
   { id: 2, expression: "손을 놓다", expressionType: "협의적 연어",
     meaning: "잡았던 손을 놓듯, 관계나 상황을 정리하고 떠나보낸다는 뜻이다.", example: "이제는 그 사람의 손을 놓아야 할 것 같아.", level: "중급",
     situation: "끝난 관계를 받아들이고 정리할 때", listener: "떠난 상대 또는 그리움의 대상", attitude: "이별이나 관계의 상실을 겪는 화자",
+    contextExample: "이별이나 관계의 상실을 겪으며, 떠난 상대에게 — \"이제는 너의 손을 놓아야 한다는 걸 알지만 아직도 마음이 아파.\"",
     dialogue: [
       { s: "A", t: "아직도 그 사람 생각 많이 나?" },
       { s: "B", t: "응. 그런데 이제는 손을 놓아야 할 것 같아." },
@@ -1788,6 +1849,7 @@ const COLLOCATIONS = [
   { id: 3, expression: "마음을 전하다", expressionType: "협의적 연어",
     meaning: "자신의 감정이나 진심을 상대에게 표현하여 전달하다.", example: "늦기 전에 좋아하는 마음을 전해 보기로 했어.", level: "초급",
     situation: "좋아하는 사람에게 고백하거나 감사를 표현할 때", listener: "사랑의 대상", attitude: "상대에게 끌림과 애정을 느끼는 화자",
+    contextExample: "사랑과 설렘 속에서, 좋아하는 사람에게 — \"오늘은 용기를 내서 너에게 내 마음을 전하고 싶어.\"",
     dialogue: [
       { s: "A", t: "그 사람한테 마음을 전해 봤어?" },
       { s: "B", t: "아니, 아직 용기가 안 나." },
@@ -1803,6 +1865,7 @@ const COLLOCATIONS = [
   { id: 4, expression: "함께 걷다", expressionType: "협의적 연어",
     meaning: "같은 길을 나란히 걸으며 시간과 경험을 공유하다.", example: "특별한 말이 없어도 함께 걷는 것만으로 좋았어.", level: "초급",
     situation: "특별한 말 없이 함께 있는 시간이 좋은 상황", listener: "친구·동료·함께하는 사람", attitude: "청춘의 일상과 관계를 즐기는 화자",
+    contextExample: "일상과 청춘 속에서, 가까운 친구에게 — \"우리 그때 아무 말 없이 함께 걸었던 길, 기억나?\"",
     dialogue: [
       { s: "A", t: "오늘 뭐 하고 싶어?" },
       { s: "B", t: "그냥 같이 걷고 싶어." },
@@ -1823,6 +1886,7 @@ const COLLOCATIONS = [
   { id: 5, expression: "곁에 있다", expressionType: "연어적 표현",
     meaning: "가까이 머물며 상대를 지지하고 함께한다는 뜻이다.", example: "힘들 때 곁에 있어 주는 사람이 진짜 친구야.", level: "초급",
     situation: "힘든 시기에 옆에서 지켜주겠다고 말할 때", listener: "자기 자신 또는 위로가 필요한 청자", attitude: "불안과 상처 속에서 위로를 구하는 화자",
+    contextExample: "위로가 필요한 순간, 지친 친구에게 — \"힘들 때 아무 말 안 해도 돼. 내가 네 곁에 있을게.\"",
     dialogue: [
       { s: "A", t: "요즘 혼자인 것 같아서 외로워." },
       { s: "B", t: "내가 네 곁에 있을게." },
@@ -1842,6 +1906,7 @@ const COLLOCATIONS = [
   { id: 6, expression: "물 만난 물고기", expressionType: "관용적 표현",
     meaning: "자신에게 잘 맞는 환경에서 능력을 마음껏 발휘하는 모습을 비유한다.", example: "무대에 오르자 완전 물 만난 물고기 같았어.", level: "중급",
     situation: "자기에게 딱 맞는 환경에서 능력을 발휘할 때", listener: "친구·동료·함께하는 사람", attitude: "청춘의 일상과 관계를 즐기는 화자",
+    contextExample: "일상과 청춘 속에서, 친구나 동료에게 — \"무대에 서니까 너 완전 물 만난 물고기 같더라!\"",
     dialogue: [
       { s: "A", t: "어제 공연에서 걔 봤어?" },
       { s: "B", t: "응. 완전 물 만난 물고기 같았어." },
@@ -1854,6 +1919,7 @@ const COLLOCATIONS = [
   { id: 7, expression: "선을 넘다", expressionType: "관용적 표현",
     meaning: "허용되는 범위나 규범을 지나쳐 상대를 불편하게 하다.", example: "아무리 친해도 그 말은 선을 넘은 것 같아.", level: "중급",
     situation: "상대의 장난이나 행동이 지나쳤다고 느낄 때", listener: "비판자·경쟁자·사회적 시선", attitude: "억압·시선·경쟁에 맞서는 화자",
+    contextExample: "억압이나 시선에 맞서며, 비판자나 경쟁자에게 — \"이번엔 내가 먼저 선을 넘어 보려고. 가만히 있으면 안 바뀌니까.\"",
     dialogue: [
       { s: "A", t: "아까 그 장난 좀 심하지 않았어?" },
       { s: "B", t: "맞아. 확실히 선을 넘었어." },
@@ -1866,6 +1932,7 @@ const COLLOCATIONS = [
   { id: 8, expression: "나사 빠진 것처럼", expressionType: "관용적·은유적 표현",
     meaning: "정신이 없거나 통제가 잘 되지 않는 상태를 비유적으로 드러낸다.", example: "잠을 못 자서 하루 종일 나사 빠진 것처럼 멍했어.", level: "중급",
     situation: "과제·일이 너무 많아 정신없는 상황", listener: "자기 자신 또는 위로가 필요한 청자", attitude: "불안과 상처 속에서 위로를 구하는 화자",
+    contextExample: "불안과 지침 속에서, 자기 자신에게 — \"요즘 나사 빠진 것처럼 정신이 하나도 없어.\"",
     dialogue: [
       { s: "A", t: "너 오늘 왜 이렇게 멍해?" },
       { s: "B", t: "어제 거의 못 잤어. 완전 나사 빠진 것처럼 돼." },
@@ -1881,6 +1948,7 @@ const COLLOCATIONS = [
   { id: 9, expression: "길을 잃다", expressionType: "은유적 표현",
     meaning: "실제 길뿐 아니라 삶의 방향이나 마음의 갈피를 잡지 못하다.", example: "진로를 두고 완전히 길을 잃은 기분이야.", level: "중급",
     situation: "진로나 삶의 방향을 모르겠다고 느낄 때", listener: "자기 자신 또는 함께 성장하는 청자", attitude: "자기 정체성과 미래를 모색하는 화자",
+    contextExample: "자기 정체성을 모색하며, 자기 자신 또는 청자에게 — \"한동안 길을 잃은 것처럼 방황했지만, 다시 방향을 찾고 싶어.\"",
     dialogue: [
       { s: "A", t: "요즘 왜 그렇게 고민이 많아 보여?" },
       { s: "B", t: "내가 뭘 하고 싶은지 모르겠어. 길을 잃은 느낌이야." },
@@ -1899,6 +1967,7 @@ const COLLOCATIONS = [
   { id: 10, expression: "길을 걷다", expressionType: "협의적 연어",
     meaning: "자신이 선택한 삶의 방향이나 과정을 이어 나가다.", example: "서두르지 않고 내가 선택한 길을 걸어 보려 해.", level: "중급",
     situation: "서두르지 않고 자기 선택을 이어가겠다고 말할 때", listener: "친구·동료·함께하는 사람", attitude: "청춘의 일상과 관계를 즐기는 화자",
+    contextExample: "일상과 청춘 속에서, 함께하는 사람에게 — \"서두르지 않고 내 속도로 이 길을 걸어가려고 해.\"",
     dialogue: [
       { s: "A", t: "아직도 고민돼?" },
       { s: "B", t: "응. 그래도 내가 선택한 길을 계속 걸어 보려고." },
@@ -1917,6 +1986,7 @@ const COLLOCATIONS = [
   { id: 11, expression: "꿈을 꾸다", expressionType: "협의적 연어",
     meaning: "잠잘 때 꿈을 꾸거나, 미래의 목표와 바람을 품다.", example: "아직도 나는 무대에 서는 꿈을 꾸고 있어.", level: "초급",
     situation: "앞으로 하고 싶은 일에 대해 이야기할 때", listener: "자기 자신 또는 함께 성장하는 청자", attitude: "자기 정체성과 미래를 모색하는 화자",
+    contextExample: "미래를 모색하며, 함께 성장하는 청자에게 — \"포기하지 않고 다시 꿈을 꾸어 보려고 해.\"",
     dialogue: [
       { s: "A", t: "너는 왜 음악을 계속하고 싶어?" },
       { s: "B", t: "어릴 때부터 무대에 서는 꿈을 꿔 왔어." },
@@ -1929,6 +1999,7 @@ const COLLOCATIONS = [
   { id: 12, expression: "빛이 되다", expressionType: "은유적 표현",
     meaning: "어두운 상황에서 희망이나 위로가 되는 존재가 되다.", example: "그 노래가 힘든 시기에 작은 빛이 되어 줬어.", level: "중급",
     situation: "힘든 시기에 누군가·무언가가 위로가 되었을 때", listener: "세계관 속 상대 또는 운명적 대상", attitude: "가상 세계나 운명적 서사 속의 인물",
+    contextExample: "운명적 서사 속에서, 중요한 대상에게 — \"가장 어두웠던 순간에 너는 내게 빛이 되어 줬어.\"",
     dialogue: [
       { s: "A", t: "그 노래 자주 듣더라." },
       { s: "B", t: "응. 힘들 때 들으면 작은 빛이 되는 느낌이야." },
@@ -1941,6 +2012,7 @@ const COLLOCATIONS = [
   { id: 13, expression: "날개를 펴다", expressionType: "은유적 표현",
     meaning: "자신이 가진 가능성과 능력을 마음껏 펼치다.", example: "이번 무대에서는 마음껏 날개를 펴고 싶어.", level: "중급",
     situation: "새로운 무대에서 자기 가능성을 보여주고 싶을 때", listener: "자기 자신 또는 함께 성장하는 청자", attitude: "자기 정체성과 미래를 모색하는 화자",
+    contextExample: "자기 미래를 모색하며, 응원하는 청자에게 — \"이제 나도 내 날개를 펴고 더 넓은 곳으로 나아갈 거야.\"",
     dialogue: [
       { s: "A", t: "이번 무대 준비 잘돼 가?" },
       { s: "B", t: "응. 이번에는 마음껏 날개를 펴고 싶어." },
@@ -1953,6 +2025,7 @@ const COLLOCATIONS = [
   { id: 14, expression: "시간이 멈추다", expressionType: "은유적 표현",
     meaning: "강렬한 인상이나 감정으로 그 순간이 정지한 듯 느껴지다.", example: "그 장면을 본 순간 시간이 멈춘 것 같았어.", level: "중급",
     situation: "특별한 순간이 영원히 남았으면 하고 바랄 때", listener: "떠난 상대 또는 그리움의 대상", attitude: "이별이나 관계의 상실을 겪는 화자",
+    contextExample: "이별이나 상실의 순간, 그리움의 대상에게 — \"너와 함께한 그 순간만큼은 시간이 멈춘 것 같았어.\"",
     dialogue: [
       { s: "A", t: "공연에서 제일 기억나는 순간이 뭐였어?" },
       { s: "B", t: "마지막 조명이 켜졌을 때. 시간이 멈춘 것 같았어." },
@@ -1968,6 +2041,7 @@ const COLLOCATIONS = [
   { id: 15, expression: "시간이 지나다", expressionType: "협의적 연어",
     meaning: "시간이 흘러 상황이나 감정이 변화하다.", example: "시간이 지나면서 그때의 아픔도 조금씩 옅어졌어.", level: "초급",
     situation: "지난 일을 돌아보며 시간의 흐름을 느낄 때", listener: "자기 자신 또는 함께 성장하는 청자", attitude: "자기 정체성과 미래를 모색하는 화자",
+    contextExample: "자기 성장을 돌아보며, 자기 자신에게 — \"시간이 지나고 보니 그때의 아픔도 나를 자라게 했더라.\"",
     dialogue: [
       { s: "A", t: "벌써 헤어질 시간이네." },
       { s: "B", t: "그러게. 시간이 너무 빨리 지나간 것 같아." },
@@ -1983,6 +2057,7 @@ const COLLOCATIONS = [
   { id: 16, expression: "시간은 금이다", expressionType: "관용적 표현",
     meaning: "시간이 매우 귀중하므로 헛되이 보내지 말아야 한다는 교훈이다.", example: "시간은 금이니까 미루지 말고 지금 시작하자.", level: "초급",
     situation: "시간을 허투루 쓰지 말자고 조언할 때", listener: "친구·동료·함께하는 사람", attitude: "청춘의 일상과 관계를 즐기는 화자",
+    contextExample: "일상과 청춘 속에서, 친구나 동료에게 — \"시간은 금이라잖아. 우리 미루지 말고 지금 시작하자.\"",
     dialogue: [
       { s: "A", t: "또 하루 종일 폰만 봤어." },
       { s: "B", t: "시간은 금이라는 말이 괜히 있는 게 아니지." },
@@ -1994,6 +2069,7 @@ const COLLOCATIONS = [
   { id: 17, expression: "기억이 나다", expressionType: "협의적 연어",
     meaning: "지난 일이 다시 떠올라 생각나다.", example: "그날의 풍경이 아직도 생생하게 기억이 나.", level: "초급",
     situation: "예전에 함께했던 일을 문득 떠올릴 때", listener: "떠난 상대 또는 그리움의 대상", attitude: "이별이나 관계의 상실을 겪는 화자",
+    contextExample: "이별이나 그리움 속에서, 추억을 나눈 사람에게 — \"비 오는 날이면 너와 함께 걷던 그 길이 기억이 나.\"",
     dialogue: [
       { s: "A", t: "그때 같이 갔던 공연 기억해?" },
       { s: "B", t: "응. 아직도 가끔 기억이 나." },
@@ -2009,6 +2085,7 @@ const COLLOCATIONS = [
   { id: 18, expression: "기억이 되다", expressionType: "은유적 표현",
     meaning: "어떤 경험이 의미 있는 기억으로 남다.", example: "함께한 여행이 평생의 기억이 됐어.", level: "중급",
     situation: "어떤 경험이 오래 남는 의미 있는 추억이 될 때", listener: "친구·동료·함께하는 사람", attitude: "청춘의 일상과 관계를 즐기는 화자",
+    contextExample: "일상과 청춘을 돌아보며, 함께한 사람에게 — \"이 시간들이 우리에게 가장 소중한 기억이 될 거야.\"",
     dialogue: [
       { s: "A", t: "그 여행이 너한테 그렇게 특별했어?" },
       { s: "B", t: "응. 평생 남는 기억이 됐어." },
@@ -3860,10 +3937,10 @@ function SitSongs({ sit, go }) {
             <div className="tt10 text-purple-600">{song.artist}</div>
             <div className="font-bold text-purple-700">{song.title}</div>
             <div className="flex gap-2 mt-2">
-              <button onClick={() => go("collocation", { song, idx: 0 })}
-                className="flex-1 rounded-full py-1.5 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">노래 속 연어 보기</button>
-              <button onClick={() => go("player", { song })}
-                className="flex-1 rounded-full py-1.5 tt11 font-bold bg-pink-400 text-white active:scale-95">이 노래로 대화 미션</button>
+              <button onClick={() => go("player", { song, situation: song.situation })}
+                className="flex-1 rounded-full py-1.5 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">▶ 듣기</button>
+              <button onClick={() => go("collocation", { song, idx: 0, situation: song.situation })}
+                className="flex-1 rounded-full py-1.5 tt11 font-bold bg-pink-400 text-white active:scale-95">연어 보기</button>
             </div>
           </div>
         </div>
