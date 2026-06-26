@@ -628,17 +628,18 @@ function PlayerScreen({ go, ctx }) {
   }, [playing, song?.audioFile]);
 
   React.useEffect(() => {
-    return () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } window.speechSynthesis.cancel(); };
+    return () => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} };
   }, [song?.id]);
 
   // 화면 이동 시 TTS 정리
-  React.useEffect(() => () => { window.speechSynthesis.cancel(); }, []);
+  React.useEffect(() => () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} }, []);
 
   if (!song) return <div className="px-5 pt-10 text-center text-purple-600">노래를 선택해 주세요.</div>;
   const sit = SITUATIONS.find((s) => s.id === song.situation);
 
   // 문장 듣기: 가사 줄 TTS (자연스러운 한국어 음성)
   function pickBestKoreanVoice() {
+    if (!window.speechSynthesis) return null;
     const voices = window.speechSynthesis.getVoices();
     const ko = voices.filter((v) => v.lang.startsWith("ko"));
     // 우선순위: Google 한국의 > InJoon/Heami > Yuna > 기본 ko
@@ -658,17 +659,17 @@ function PlayerScreen({ go, ctx }) {
     if (voice) utt.voice = voice;
     utt.onend = onEnd;
     utt.onerror = onEnd;
-    window.speechSynthesis.speak(utt);
+    if (window.speechSynthesis) window.speechSynthesis.speak(utt);
   }
 
   function handleSentenceTTS() {
     if (!song.lyricLines || song.lyricLines.length === 0) return;
-    if (ttsPlaying) { window.speechSynthesis.cancel(); setTtsPlaying(false); return; }
+    if (ttsPlaying) { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} setTtsPlaying(false); return; }
 
     const voice = pickBestKoreanVoice();
     const lines = song.lyricLines.filter((l) => l.trim());
     setTtsPlaying(true);
-    window.speechSynthesis.cancel();
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
 
     // 줄 단위로 끊어서 자연스럽게 읽기
     let idx = 0;
@@ -685,9 +686,14 @@ function PlayerScreen({ go, ctx }) {
 
   // 음성 목록 로드 (브라우저가 비동기로 음성을 로드함)
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    try {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.getVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+      }
+    } catch (e) {}
   }, []);
 
   // 구간 듣기: YouTube 해당 시점부터 열기
@@ -728,31 +734,20 @@ function PlayerScreen({ go, ctx }) {
           {/* 듣기 버튼 행 */}
           <div className="flex gap-2 mt-3 justify-center">
             {song.audioFile && (
-              <button onClick={() => {
-                const audio = new Audio();
-                audio.src = song.audioFile;
-                audio.preload = "auto";
-                const startAt = song.lyricStart || 0;
-                // 메타데이터 로드 시 시점 이동
-                audio.addEventListener("loadedmetadata", () => {
-                  try { audio.currentTime = startAt; } catch (e) {}
-                }, { once: true });
-                // 재생 시작
-                const p = audio.play();
-                if (p && p.then) {
-                  p.then(() => {
-                    // 재생 성공 후에도 한 번 더 currentTime 시도 (Samsung 인터넷 호환)
-                    try { audio.currentTime = startAt; } catch (e) {}
-                  }).catch((err) => {
-                    console.warn("재생 실패:", err);
-                    alert("재생할 수 없습니다. 다시 한 번 눌러 주세요.");
-                  });
-                }
-                setTimeout(() => audio.pause(), 25000);
-              }}
-                className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
-                ▶ 구간 듣기
-              </button>
+              <>
+                <audio id="segment-audio" src={song.audioFile} preload="metadata" style={{display:"none"}} />
+                <button onClick={() => {
+                  const audio = document.getElementById("segment-audio");
+                  if (!audio) return;
+                  const startAt = song.lyricStart || 0;
+                  audio.currentTime = startAt;
+                  audio.play().catch((e) => console.warn("재생 실패:", e));
+                  setTimeout(() => { try { audio.pause(); audio.currentTime = startAt; } catch(e){} }, 20000);
+                }}
+                  className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
+                  ▶ 구간 듣기
+                </button>
+              </>
             )}
             {!song.audioFile && song.youtubeId && (
               <button onClick={handleSegmentYouTube}
@@ -3066,8 +3061,8 @@ function DialogueListen({ text, situation }) {
 
   function playAll() {
     if (!dialogue || dialogue.length === 0) return;
-    window.speechSynthesis.cancel();
-    const voices = window.speechSynthesis.getVoices();
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
     const koVoices = voices.filter((v) => v.lang.startsWith("ko"));
     let idx = 0;
     function speakNext() {
@@ -3084,14 +3079,14 @@ function DialogueListen({ text, situation }) {
         utt.pitch = turn.s === "A" ? 1.2 : 0.8;
       }
       utt.onend = () => { idx++; setTimeout(speakNext, 400); };
-      window.speechSynthesis.speak(utt);
+      if (window.speechSynthesis) window.speechSynthesis.speak(utt);
     }
     speakNext();
   }
 
-  function stop() { window.speechSynthesis.cancel(); setPlaying(-1); }
+  function stop() { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} setPlaying(-1); }
 
-  useEffect(() => () => window.speechSynthesis.cancel(), []);
+  useEffect(() => () => { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} }, []);
 
   return (
     <div className="mt-3">
@@ -4452,7 +4447,7 @@ export default function App() {
   }
 
   function go(next, newCtx = {}) {
-    try { window.speechSynthesis.cancel(); } catch(e) {}
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e) {}
     setCtx((c) => {
       const merged = { ...c, ...newCtx };
       return merged;
@@ -4463,7 +4458,7 @@ export default function App() {
     else if (next === "home") setTab("home");
   }
   function onNav(id) {
-    try { window.speechSynthesis.cancel(); } catch(e) {}
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e) {}
     setTab(id);
     setScreen(id === "home" ? "home" : id);
   }
