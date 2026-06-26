@@ -600,6 +600,8 @@ function PlayerScreen({ go, ctx }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [ttsPlaying, setTtsPlaying] = useState(false);
+  const [segmentPlaying, setSegmentPlaying] = useState(false);
+  const segmentTimerRef = React.useRef(null);
   const audioRef = React.useRef(null);
 
   // 음원 파일 재생/일시정지
@@ -663,25 +665,29 @@ function PlayerScreen({ go, ctx }) {
   }
 
   function handleSentenceTTS() {
+    if (!window.speechSynthesis) { alert("이 브라우저는 음성 읽기를 지원하지 않습니다."); return; }
     if (!song.lyricLines || song.lyricLines.length === 0) return;
-    if (ttsPlaying) { try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){} setTtsPlaying(false); return; }
+    if (ttsPlaying) { try { window.speechSynthesis.cancel(); } catch(e){} setTtsPlaying(false); return; }
 
-    const voice = pickBestKoreanVoice();
     const lines = song.lyricLines.filter((l) => l.trim());
     setTtsPlaying(true);
-    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
+    try { window.speechSynthesis.cancel(); } catch(e){}
 
-    // 줄 단위로 끊어서 자연스럽게 읽기
+    // 첫 발화는 사용자 인터랙션 직후 즉시 호출 (삼성/iOS 대응)
+    const voice = pickBestKoreanVoice();
     let idx = 0;
-    const readNext = () => {
+    const speakNext = () => {
       if (idx >= lines.length) { setTtsPlaying(false); return; }
-      speakLine(lines[idx], voice, 0.95, () => {
-        idx++;
-        // 줄 사이에 짧은 쉼
-        setTimeout(readNext, 250);
-      });
+      const utt = new SpeechSynthesisUtterance(lines[idx]);
+      utt.lang = "ko-KR";
+      utt.rate = 0.95;
+      utt.pitch = 1.0;
+      if (voice) utt.voice = voice;
+      utt.onend = () => { idx++; setTimeout(speakNext, 250); };
+      utt.onerror = () => { idx++; setTimeout(speakNext, 250); };
+      try { window.speechSynthesis.speak(utt); } catch(e) { setTtsPlaying(false); }
     };
-    readNext();
+    speakNext();
   }
 
   // 음성 목록 로드 (브라우저가 비동기로 음성을 로드함)
@@ -700,7 +706,7 @@ function PlayerScreen({ go, ctx }) {
   function handleSegmentYouTube() {
     if (!song.youtubeId) return;
     const t = song.lyricStart || 0;
-    window.open(`https://www.youtube.com/watch?v=${song.youtubeId}&t=${t}`, "_blank");
+    window.open(`https://www.youtube.com/embed/${song.youtubeId}?autoplay=1&start=${t}&rel=0`, "_blank");
   }
 
   const sameSituation = SONGS.filter((s) => s.situation === song.situation);
@@ -735,17 +741,39 @@ function PlayerScreen({ go, ctx }) {
           <div className="flex gap-2 mt-3 justify-center">
             {song.audioFile && (
               <>
-                <audio id="segment-audio" src={song.audioFile} preload="metadata" style={{display:"none"}} />
+                <audio id="segment-audio" src={song.audioFile} preload="auto" 
+                  style={{position:"absolute", left:"-9999px", width:1, height:1}}
+                  onEnded={() => setSegmentPlaying(false)} />
                 <button onClick={() => {
                   const audio = document.getElementById("segment-audio");
-                  if (!audio) return;
+                  if (!audio) { alert("오디오를 찾을 수 없습니다."); return; }
                   const startAt = song.lyricStart || 0;
-                  audio.currentTime = startAt;
-                  audio.play().catch((e) => console.warn("재생 실패:", e));
-                  setTimeout(() => { try { audio.pause(); audio.currentTime = startAt; } catch(e){} }, 20000);
+                  if (segmentPlaying) {
+                    try { audio.pause(); audio.currentTime = startAt; } catch(e){}
+                    if (segmentTimerRef.current) { clearTimeout(segmentTimerRef.current); segmentTimerRef.current = null; }
+                    setSegmentPlaying(false);
+                  } else {
+                    // 사용자 인터랙션 직후 즉시 play 호출 (삼성 인터넷 대응)
+                    const playPromise = audio.play();
+                    setSegmentPlaying(true);
+                    if (playPromise && playPromise.then) {
+                      playPromise.then(() => {
+                        // 재생 성공 후 시점 이동
+                        try { audio.currentTime = startAt; } catch(e){}
+                      }).catch((e) => {
+                        setSegmentPlaying(false);
+                        alert("재생할 수 없습니다: " + (e.message || e.name || "알 수 없는 오류"));
+                      });
+                    }
+                    segmentTimerRef.current = setTimeout(() => {
+                      try { audio.pause(); audio.currentTime = startAt; } catch(e){}
+                      setSegmentPlaying(false);
+                      segmentTimerRef.current = null;
+                    }, 20000);
+                  }
                 }}
-                  className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
-                  ▶ 구간 듣기
+                  className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
+                  {segmentPlaying ? "⏹ 멈추기" : "▶ 구간 듣기"}
                 </button>
               </>
             )}
@@ -783,7 +811,7 @@ function PlayerScreen({ go, ctx }) {
       </div>
       <div className="flex items-center justify-center mt-3">
         <button onClick={() => {
-          if (song.youtubeId) window.open(`https://www.youtube.com/watch?v=${song.youtubeId}`, "_blank");
+          if (song.youtubeId) window.open(`https://www.youtube.com/embed/${song.youtubeId}?autoplay=1&rel=0`, "_blank");
           else alert("이 곡의 YouTube 영상이 아직 등록되지 않았습니다.");
         }}
           className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
@@ -4507,4 +4535,3 @@ export default function App() {
     </div>
   );
 }
-
