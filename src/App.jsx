@@ -369,8 +369,18 @@ function SectionTitle({ children, note }) {
 
 /* =============================== 화면 1: 홈 =============================== */
 function HomeScreen({ go }) {
+  const isKakao = (navigator.userAgent || "").includes("KAKAOTALK");
   return (
     <div className="px-5 pt-3 pb-24">
+      {isKakao && (
+        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-3 mb-3">
+          <p className="tt11 font-bold text-amber-700 mb-1">⚠️ 카카오톡 브라우저에서는 음성 기능이 제한됩니다</p>
+          <button onClick={() => { window.location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(window.location.href); }}
+            className="w-full rounded-full py-2 tt11 font-bold bg-amber-500 text-white">
+            🌐 Chrome / 삼성 인터넷에서 열기
+          </button>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-1">
         <span className="text-xl">☰</span>
         <span className="text-xl">⭐</span>
@@ -665,7 +675,18 @@ function PlayerScreen({ go, ctx }) {
   }
 
   function handleSentenceTTS() {
-    if (!window.speechSynthesis) { alert("이 브라우저는 음성 읽기를 지원하지 않습니다."); return; }
+    if (!window.speechSynthesis) {
+      const ua = navigator.userAgent || "";
+      const isKakao = ua.includes("KAKAOTALK");
+      if (isKakao) {
+        if (confirm("카카오톡 브라우저에서는 음성 듣기가 지원되지 않습니다.\n외부 브라우저(Chrome/삼성 인터넷)로 열겠습니까?")) {
+          window.location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(window.location.href);
+        }
+      } else {
+        alert("이 브라우저는 음성 읽기를 지원하지 않습니다. Chrome이나 삼성 인터넷으로 열어 주세요.");
+      }
+      return;
+    }
     if (!song.lyricLines || song.lyricLines.length === 0) return;
     if (ttsPlaying) { try { window.speechSynthesis.cancel(); } catch(e){} setTtsPlaying(false); return; }
 
@@ -761,9 +782,6 @@ function PlayerScreen({ go, ctx }) {
               </button>
             )}
           </div>
-          {song.audioFile && (
-            <p className="tt10 text-white/50 mt-2">가사 시점부터 20초간 재생됩니다</p>
-          )}
           {!song.audioFile && song.youtubeId && (
             <p className="tt10 text-white/50 mt-2">구간 듣기는 YouTube에서 해당 가사 시점({Math.floor((song.lyricStart||0)/60)}분 {(song.lyricStart||0)%60}초)부터 재생됩니다</p>
           )}
@@ -4400,6 +4418,15 @@ export default function App() {
   const [progress, setProgress] = useState({ score: 0, done: {}, dragCount: 0 });
   // 모국어 도움말 언어 (null = 한국어만)
   const [l1Lang, setL1Lang] = useState(null);
+
+  // 카카오톡 인앱 브라우저 → 외부 브라우저 자동 이동
+  useEffect(() => {
+    const ua = navigator.userAgent || "";
+    if (ua.includes("KAKAOTALK")) {
+      const url = window.location.href;
+      window.location.href = "kakaotalk://web/openExternal?url=" + encodeURIComponent(url);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
