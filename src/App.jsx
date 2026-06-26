@@ -605,16 +605,25 @@ function PlayerScreen({ go, ctx }) {
   // 음원 파일 재생/일시정지
   React.useEffect(() => {
     if (!song?.audioFile) return;
-    if (!audioRef.current) {
-      audioRef.current = new Audio(song.audioFile);
-      audioRef.current.addEventListener("timeupdate", () => {
-        const a = audioRef.current;
-        if (a && a.duration) setProgress((a.currentTime / a.duration) * 100);
-      });
-      audioRef.current.addEventListener("ended", () => { setPlaying(false); setProgress(0); });
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(song.audioFile);
+        audioRef.current.addEventListener("timeupdate", () => {
+          const a = audioRef.current;
+          if (a && a.duration) setProgress((a.currentTime / a.duration) * 100);
+        });
+        audioRef.current.addEventListener("ended", () => { setPlaying(false); setProgress(0); });
+        audioRef.current.addEventListener("error", (e) => { console.warn("Audio error:", e); });
+      }
+      if (playing) {
+        const p = audioRef.current.play();
+        if (p && p.catch) p.catch((err) => { console.warn("Play blocked:", err); setPlaying(false); });
+      } else {
+        audioRef.current.pause();
+      }
+    } catch (e) {
+      console.warn("Audio setup error:", e);
     }
-    if (playing) audioRef.current.play();
-    else audioRef.current.pause();
     return () => {};
   }, [playing, song?.audioFile]);
 
@@ -720,10 +729,26 @@ function PlayerScreen({ go, ctx }) {
           <div className="flex gap-2 mt-3 justify-center">
             {song.audioFile && (
               <button onClick={() => {
-                const audio = new Audio(song.audioFile);
-                audio.currentTime = song.lyricStart || 0;
-                audio.play();
-                setTimeout(() => audio.pause(), 20000);
+                const audio = new Audio();
+                audio.src = song.audioFile;
+                audio.preload = "auto";
+                const startAt = song.lyricStart || 0;
+                // 메타데이터 로드 시 시점 이동
+                audio.addEventListener("loadedmetadata", () => {
+                  try { audio.currentTime = startAt; } catch (e) {}
+                }, { once: true });
+                // 재생 시작
+                const p = audio.play();
+                if (p && p.then) {
+                  p.then(() => {
+                    // 재생 성공 후에도 한 번 더 currentTime 시도 (Samsung 인터넷 호환)
+                    try { audio.currentTime = startAt; } catch (e) {}
+                  }).catch((err) => {
+                    console.warn("재생 실패:", err);
+                    alert("재생할 수 없습니다. 다시 한 번 눌러 주세요.");
+                  });
+                }
+                setTimeout(() => audio.pause(), 25000);
               }}
                 className="flex items-center gap-1.5 rounded-full px-4 py-1.5 bg-red-500 text-white tt12 font-bold active:scale-95 shadow">
                 ▶ 구간 듣기
@@ -762,15 +787,14 @@ function PlayerScreen({ go, ctx }) {
         </div>
       </div>
       <div className="flex items-center justify-center mt-3">
-        <button onClick={() => song.audioFile && setPlaying((p) => !p)}
-          disabled={!song.audioFile}
-          className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow ${song.audioFile ? "bg-purple-500" : "bg-purple-200 cursor-not-allowed"}`}>
-          {playing ? "⏸ 일시정지" : "▶ 전체 듣기"}
+        <button onClick={() => {
+          if (song.youtubeId) window.open(`https://www.youtube.com/watch?v=${song.youtubeId}`, "_blank");
+          else alert("이 곡의 YouTube 영상이 아직 등록되지 않았습니다.");
+        }}
+          className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
+          ▶ 전체 듣기
         </button>
       </div>
-      {!song.audioFile && (
-        <p className="text-center tt10 text-purple-500 mt-2">음원 준비 중</p>
-      )}
       <div className="flex gap-2 mt-3">
         <button onClick={() => go("player", { song: nextSong })}
           className="flex-1 rounded-full py-2 text-xs font-bold bg-purple-100 text-purple-600 active:scale-95">다른 노래 보기 🎵</button>
