@@ -77,11 +77,11 @@ const SONGS = [
     lyricLines: ["나만 바라봐 뜨거운 태양처럼", "맘대로 내 맘을 뒤집어 놓고", "돌아서지 마! 내 손을 잡아"],
     collocations: [{ id: "treasure-son-jabda", word: "손을 잡다", body: "손", meaning: "사랑을 시작하며 함께하다", category: "관계 연어", level: "초급",
       meaningDetail: "좋아하는 사람에게 마음을 고백하고, 앞으로도 함께 사랑을 이어 가고 싶다는 마음을 나타내는 표현",
-      situationDetail: "사랑을 알게 해 준 상대에게 고마움과 사랑을 고백하고 계속 함께하고 싶은 상황",
-      listenerDetail: "말하는 사람의 세상을 밝게 바꾸어 주고 사랑을 느끼게 해 준 상대",
-      attitudeDetail: "상대를 만나 사랑을 알게 되었고, 앞으로도 함께하고 싶은 사람",
-      exampleDetail: "\"너를 만나 내 마음이 밝아졌어. 앞으로도 내 손을 잡고 함께해 줘.\"",
-      dialogueDetail: [{ s: "A", t: "너 때문에 내 세상이 밝아졌어." }, { s: "B", t: "우리 앞으로도 손잡고 함께하자." }]
+      situationDetail: "떠나려는 상대를 붙잡으며 자신의 사랑을 강하게 표현하고 싶은 상황",
+      listenerDetail: "마음이 흔들리거나 떠나려 하는, 사랑하는 상대",
+      attitudeDetail: "상대를 향한 사랑이 강해 절대 보내고 싶지 않은 사람",
+      exampleDetail: "\"돌아서지 마. 내 손을 잡아. 너 없는 나는 상상할 수 없어.\"",
+      dialogueDetail: [{ s: "A", t: "왠지 네가 떠날 것 같아 불안해." }, { s: "B", t: "돌아서지 마. 내 손을 잡아. 너만 보고 있을게." }]
     }],
   },
   {
@@ -206,7 +206,7 @@ const SONGS = [
     collocations: [],
   },
   {
-    id: "bts-make-it-right", situation: "love",
+    id: "bts-make-it-right", situation: "comfort",
     artist: "BTS", title: "Make It Right",
     mood: "설렘과 함께하기", emoji: "🤝",
     cover: "from-purple-300 via-pink-300 to-rose-300",
@@ -979,8 +979,8 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
 
       <div className="mt-4 mb-2">
         <button onClick={() => go("songList", { situation: song.situation, artist: null })}
-          className="w-9 h-9 rounded-full bg-purple-100 text-purple-500 flex items-center justify-center active:scale-90 shadow-sm">
-          ←
+          className="w-full rounded-full py-2 text-sm font-bold bg-purple-100 text-purple-500 active:scale-95 shadow-sm">
+          ← 노래 목록으로
         </button>
       </div>
     </div>
