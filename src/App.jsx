@@ -484,12 +484,16 @@ function findSongMeta(artist, title) {
 }
 function openYouTubeNoAds(youtubeId, lyricStart) {
   /* K-POP MV는 외부 도메인 임베드 제한(오류 153)이 빈번하므로 표준 watch URL 사용.
-     &t=Xs 로 가사 시작 시점에 점프하여 인트로 부분을 우회한다.
+     &t=Xs            : 가사 시작 시점 점프 (인트로 우회)
+     &cc_load_policy=1: 자막 자동 활성화
+     &cc_lang_pref=ko : 자막 우선 언어 한국어 (영상에 ko 자막이 업로드된 경우 적용)
+     &hl=ko           : 인터페이스/도움말 언어 한국어
      영상 광고 자체는 YouTube Premium 외에는 합법적·기술적 차단이 불가하다. */
   if (!youtubeId) return;
   const t = lyricStart || 0;
   const tParam = t > 0 ? `&t=${t}s` : "";
-  const url = `https://www.youtube.com/watch?v=${youtubeId}${tParam}`;
+  const ccParam = "&cc_load_policy=1&cc_lang_pref=ko&hl=ko";
+  const url = `https://www.youtube.com/watch?v=${youtubeId}${tParam}${ccParam}`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
@@ -1107,6 +1111,15 @@ function Row({ icon, label, children }) {
   );
 }
 
+/* ── 연어 카드 정보 라벨 다국어 사전 (CollocationScreen) ── */
+const ROW_LABELS = {
+  ko: { meaning: "의미",     situation: "상황",       listener: "듣는 사람", attitude: "말하는 사람", example: "예문",    dialogue: "대화 예문" },
+  en: { meaning: "Meaning",  situation: "Situation",  listener: "Listener",  attitude: "Speaker",     example: "Example", dialogue: "Dialogue" },
+  zh: { meaning: "含义",     situation: "情境",       listener: "听者",      attitude: "说话者",      example: "例句",    dialogue: "对话例句" },
+  ja: { meaning: "意味",     situation: "状況",       listener: "聞き手",    attitude: "話し手",      example: "例文",    dialogue: "会話例" },
+  vi: { meaning: "Ý nghĩa",  situation: "Tình huống", listener: "Người nghe", attitude: "Người nói",  example: "Ví dụ",   dialogue: "Hội thoại" },
+};
+
 function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
   const { song, idx } = ctx;
   const c = song.collocations[idx];
@@ -1141,40 +1154,54 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
 
         <div className="mt-3">
           {tr && (
-            <div className="flex gap-1 flex-wrap mb-2">
-              {[
-                { code: "ko", flag: "🇰🇷", label: "한" },
-                { code: "en", flag: "🇺🇸", label: "EN" },
-                { code: "zh", flag: "🇨🇳", label: "中" },
-                { code: "ja", flag: "🇯🇵", label: "日" },
-                { code: "vi", flag: "🇻🇳", label: "VI" },
-              ].map((l) => (
-                <button key={l.code} onClick={() => setL1(l.code)}
-                  className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${l1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
-                  {l.flag} {l.label}
-                </button>
-              ))}
+            <div className="mb-2">
+              <div className="tt9 text-indigo-500 font-medium mb-1 flex items-center gap-1 flex-wrap">
+                <span className="text-sm">🌐</span>
+                <span>모국어로 보기</span>
+                <span className="text-indigo-300">·</span>
+                <span>Your language</span>
+                <span className="text-indigo-300">·</span>
+                <span>母语</span>
+                <span className="text-indigo-300">·</span>
+                <span>母語</span>
+                <span className="text-indigo-300">·</span>
+                <span>Ngôn ngữ</span>
+              </div>
+              <div className="flex gap-1 flex-wrap">
+                {[
+                  { code: "ko", flag: "🇰🇷", label: "한" },
+                  { code: "en", flag: "🇺🇸", label: "EN" },
+                  { code: "zh", flag: "🇨🇳", label: "中" },
+                  { code: "ja", flag: "🇯🇵", label: "日" },
+                  { code: "vi", flag: "🇻🇳", label: "VI" },
+                ].map((l) => (
+                  <button key={l.code} onClick={() => setL1(l.code)}
+                    className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${l1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
+                    {l.flag} {l.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
           {(c.meaningDetail || full.meaning) ? (
-            <Row icon="💡" label="의미">
+            <Row icon="💡" label={ROW_LABELS[l1].meaning}>
               <div className="font-black text-purple-800 text-base">{showInLang(c.meaning || full.meaning, "meaning")}</div>
               {(c.meaningDetail || full.meaningDetail) && (
                 <div className="italic text-purple-600 tt11 mt-1">{showInLang(c.meaningDetail || full.meaningDetail, "meaningDetail")}</div>
               )}
             </Row>
           ) : (
-            <Row icon="💡" label="의미">{c.meaning}</Row>
+            <Row icon="💡" label={ROW_LABELS[l1].meaning}>{c.meaning}</Row>
           )}
-          <Row icon="💗" label="상황">{showInLang(c.situationDetail || full.situation, "situation")}</Row>
-          <Row icon="🎧" label="듣는 사람">{showInLang(c.listenerDetail || full.listener, "listener")}</Row>
-          <Row icon="🙂" label="말하는 사람">{showInLang(c.attitudeDetail || full.attitude, "attitude")}</Row>
-          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문"><HighlightExpr text={showInLang(c.exampleDetail || full.contextExample, "example")} expr={c.word} forms={c.forms || full.forms} highlightClass="font-black text-orange-500" /></Row>}
+          <Row icon="💗" label={ROW_LABELS[l1].situation}>{showInLang(c.situationDetail || full.situation, "situation")}</Row>
+          <Row icon="🎧" label={ROW_LABELS[l1].listener}>{showInLang(c.listenerDetail || full.listener, "listener")}</Row>
+          <Row icon="🙂" label={ROW_LABELS[l1].attitude}>{showInLang(c.attitudeDetail || full.attitude, "attitude")}</Row>
+          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label={ROW_LABELS[l1].example}><HighlightExpr text={showInLang(c.exampleDetail || full.contextExample, "example")} expr={c.word} forms={c.forms || full.forms} highlightClass="font-black text-orange-500" /></Row>}
           {((c.dialogueDetail && c.dialogueDetail.length > 0) || (full.dialogue && full.dialogue.length > 0)) && (
             <div className="mt-2 rounded-xl bg-purple-50 p-2.5">
               <div className="flex items-center gap-1 mb-1.5">
                 <span>💬</span>
-                <span className="tt11 font-bold text-purple-600">대화 예문</span>
+                <span className="tt11 font-bold text-purple-600">{ROW_LABELS[l1].dialogue}</span>
               </div>
               <div className="space-y-1">
                 {(c.dialogueDetail || full.dialogue).map((turn, i) => (
@@ -2771,20 +2798,34 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
       {/* 관련 연어 네트워크 상세 */}
       {hasNet && showNet && (
         <div className="mt-2 space-y-2">
-          {/* 언어 토글 */}
-          <div className="flex gap-1 flex-wrap">
-            {[
-              { code: "ko", flag: "🇰🇷", label: "한" },
-              { code: "en", flag: "🇺🇸", label: "EN" },
-              { code: "zh", flag: "🇨🇳", label: "中" },
-              { code: "ja", flag: "🇯🇵", label: "日" },
-              { code: "vi", flag: "🇻🇳", label: "VI" },
-            ].map((l) => (
-              <button key={l.code} onClick={() => setLocalL1(l.code)}
-                className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${localL1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
-                {l.flag} {l.label}
-              </button>
-            ))}
+          {/* 언어 토글 + 다국어 안내 라벨 */}
+          <div>
+            <div className="tt9 text-indigo-500 font-medium mb-1 flex items-center gap-1 flex-wrap">
+              <span className="text-sm">🌐</span>
+              <span>모국어로 보기</span>
+              <span className="text-indigo-300">·</span>
+              <span>Your language</span>
+              <span className="text-indigo-300">·</span>
+              <span>母语</span>
+              <span className="text-indigo-300">·</span>
+              <span>母語</span>
+              <span className="text-indigo-300">·</span>
+              <span>Ngôn ngữ</span>
+            </div>
+            <div className="flex gap-1 flex-wrap">
+              {[
+                { code: "ko", flag: "🇰🇷", label: "한" },
+                { code: "en", flag: "🇺🇸", label: "EN" },
+                { code: "zh", flag: "🇨🇳", label: "中" },
+                { code: "ja", flag: "🇯🇵", label: "日" },
+                { code: "vi", flag: "🇻🇳", label: "VI" },
+              ].map((l) => (
+                <button key={l.code} onClick={() => setLocalL1(l.code)}
+                  className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${localL1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
+                  {l.flag} {l.label}
+                </button>
+              ))}
+            </div>
           </div>
           {/* 비슷한 표현 */}
           {c.similar && c.similar.length > 0 && (
