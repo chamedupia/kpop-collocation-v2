@@ -1139,7 +1139,7 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
           <Row icon="💗" label="상황">{showInLang(c.situationDetail || full.situation, "situation")}</Row>
           <Row icon="🎧" label="듣는 사람">{showInLang(c.listenerDetail || full.listener, "listener")}</Row>
           <Row icon="🙂" label="말하는 사람">{showInLang(c.attitudeDetail || full.attitude, "attitude")}</Row>
-          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문">{showInLang(c.exampleDetail || full.contextExample, "example")}</Row>}
+          {(c.exampleDetail || full.contextExample) && <Row icon="✍️" label="예문"><HighlightExpr text={showInLang(c.exampleDetail || full.contextExample, "example")} expr={c.word} forms={c.forms || full.forms} highlightClass="font-black text-orange-500" /></Row>}
           {((c.dialogueDetail && c.dialogueDetail.length > 0) || (full.dialogue && full.dialogue.length > 0)) && (
             <div className="mt-2 rounded-xl bg-purple-50 p-2.5">
               <div className="flex items-center gap-1 mb-1.5">
@@ -1150,7 +1150,7 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
                 {(c.dialogueDetail || full.dialogue).map((turn, i) => (
                   <div key={i} className="flex gap-2 tt12 leading-relaxed">
                     <span className={`font-black shrink-0 ${turn.s === "A" ? "text-pink-500" : "text-blue-500"}`}>{turn.s}</span>
-                    <span className="text-purple-800">{turn.t}</span>
+                    <span className="text-purple-800"><HighlightExpr text={turn.t} expr={c.word} forms={c.forms || full.forms} highlightClass="font-black text-orange-500" /></span>
                   </div>
                 ))}
               </div>
@@ -1911,6 +1911,57 @@ function getL10n(lang, expr) {
 }
 
 /* 연어 카드용 L1 토글 컴포넌트 */
+/* ── 연어 표현 강조 컴포넌트 (노란색 볼드체) ── */
+function HighlightExpr({ text, expr, forms, highlightClass = "font-black text-yellow-300" }) {
+  if (!text || !expr) return text;
+  // 기본형 + 활용형 모두 매칭 대상으로 수집
+  const variants = [expr, ...(forms || [])];
+  // "손을 잡다" → "손을 잡", "잡아", "잡았", "잡으" 등 어근도 포함하기 위해 어간 추출
+  const stems = new Set(variants);
+  variants.forEach((v) => {
+    // 한국어 동사/형용사: 마지막 글자가 다/아/어로 끝나면 그 앞부분(어간)도 추가
+    const stem = v.replace(/[다아어]$/, "").trim();
+    if (stem.length >= 2) stems.add(stem);
+  });
+  // 가장 긴 것부터 매칭 (정확도 향상)
+  const sorted = Array.from(stems).sort((a, b) => b.length - a.length);
+  // RegExp 안전 문자 escape
+  const escaped = sorted.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const re = new RegExp(`(${escaped.join("|")})`, "g");
+  const parts = text.split(re);
+  return (
+    <>
+      {parts.map((p, i) =>
+        escaped.some((e) => new RegExp(`^${e}$`).test(p))
+          ? <span key={i} className={highlightClass}>{p}</span>
+          : <span key={i}>{p}</span>
+      )}
+    </>
+  );
+}
+
+/* ── 관련 연어 note 번역 사전 ── */
+const NOTE_TRANSLATIONS = {
+  "지지, 동반, 위로":        { en: "Support, companionship, comfort", zh: "支持、陪伴、安慰", ja: "支え、寄り添い、慰め", vi: "Ủng hộ, đồng hành, an ủi" },
+  "동행, 관계 지속, 공동 경험": { en: "Walking together, lasting bond, shared experience", zh: "同行、关系延续、共同经历", ja: "同行、関係の継続、共有体験", vi: "Đồng hành, mối quan hệ kéo dài, trải nghiệm chung" },
+  "관계 이탈, 감정 정리":     { en: "Leaving the relationship, sorting out feelings", zh: "脱离关系、整理情感", ja: "関係からの離脱、感情の整理", vi: "Rời khỏi mối quan hệ, giải tỏa cảm xúc" },
+  "관계 형성, 지지, 동행":   { en: "Forming a bond, support, walking together", zh: "建立关系、支持、同行", ja: "関係形成、支え、同行", vi: "Hình thành mối quan hệ, ủng hộ, đồng hành" },
+  "혼란, 방향 상실":           { en: "Confusion, losing direction", zh: "迷茫、失去方向", ja: "混乱、方向喪失", vi: "Bối rối, mất phương hướng" },
+  "상태 드러내기, 혼란 표현":  { en: "Showing one's state, expressing confusion", zh: "表露状态、表达混乱", ja: "状態を表す、混乱の表現", vi: "Bộc lộ trạng thái, diễn tả sự bối rối" },
+  "과정, 동행, 삶의 진행":     { en: "Journey, companionship, the flow of life", zh: "过程、同行、人生进行", ja: "過程、同行、人生の歩み", vi: "Hành trình, đồng hành, dòng chảy cuộc sống" },
+  "시간 경과, 회상":           { en: "Passing of time, looking back", zh: "时间流逝、回忆", ja: "時間の経過、回想", vi: "Thời gian trôi qua, hồi tưởng" },
+  "경험의 의미화, 회상":       { en: "Giving meaning to experiences, looking back", zh: "经验的意义化、回忆", ja: "経験の意味づけ、回想", vi: "Định hình ý nghĩa của trải nghiệm, hồi tưởng" },
+  "회상":                       { en: "Looking back", zh: "回忆", ja: "回想", vi: "Hồi tưởng" },
+  "관련 표현":                  { en: "Related expression", zh: "相关表达", ja: "関連表現", vi: "Biểu hiện liên quan" },
+};
+
+function NoteText({ note, lang }) {
+  if (!note) return null;
+  if (lang === "ko" || !lang) return note;
+  const tr = NOTE_TRANSLATIONS[note];
+  return tr && tr[lang] ? tr[lang] : note;
+}
+
 function L1Gloss({ lang, expr }) {
   const [open, setOpen] = useState(false);
   if (!lang) return null;
@@ -2005,7 +2056,7 @@ const COLLOCATIONS = [
       { s: "B", t: "괜찮아. 내가 네 손을 잡아 줄게." },
       { s: "A", t: "고마워. 네가 곁에 있어서 다행이야." },
     ],
-    category: "이별·상실", songDomain: ["이별·상실", "사랑·설렘", "고민·불안·위로", "일상·청춘", "세계관"],
+    category: "사랑·설렘", songDomain: ["사랑·설렘", "이별·상실", "고민·불안·위로", "일상·청춘", "세계관"],
     func: "관계 형성, 지지, 동행", discourseFunction: ["관계 형성", "지지", "동행"], status: "confirmed",
     similar: [
       { expr: "곁에 있다", note: "지지, 동반, 위로", example: "힘들 때 곁에 있어 줘서 정말 고마워." },
@@ -2632,6 +2683,7 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [showNet, setShowNet] = useState(false);
+  const [localL1, setLocalL1] = useState(l1Lang || "ko");
   const c = COLLOCATIONS[idx];
   const last = idx === COLLOCATIONS.length - 1;
   const alreadyDone = !!progress.done.card;
@@ -2656,7 +2708,7 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
             <div className="text-xl font-black">{c.expression}</div>
             <div className="tt12 leading-relaxed bg-white/25 rounded-xl p-2">📖 {c.meaning}</div>
             <div className="tt12 bg-white/25 rounded-xl p-2">🗣️ 담화 기능: {c.func}</div>
-            <div className="tt12 bg-white/25 rounded-xl p-2">✏️ 예문: {c.example}</div>
+            <div className="tt12 bg-white/25 rounded-xl p-2">✏️ 예문: <HighlightExpr text={c.example} expr={c.expression} forms={c.forms} /></div>
             {c.dialogue && (
               <div className="bg-teal-400/30 border border-teal-300/40 rounded-xl p-2">
                 <div className="tt11 font-bold text-teal-100 mb-1">💬 대화 예문</div>
@@ -2664,7 +2716,7 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
                   {c.dialogue.map((d, i) => (
                     <div key={i} className="tt12 flex gap-1.5 leading-relaxed text-white">
                       <span className="font-black shrink-0 text-teal-200">{d.s}:</span>
-                      <span>{d.t}</span>
+                      <span><HighlightExpr text={d.t} expr={c.expression} forms={c.forms} /></span>
                     </div>
                   ))}
                 </div>
@@ -2689,6 +2741,21 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
       {/* 관련 연어 네트워크 상세 */}
       {hasNet && showNet && (
         <div className="mt-2 space-y-2">
+          {/* 언어 토글 */}
+          <div className="flex gap-1 flex-wrap">
+            {[
+              { code: "ko", flag: "🇰🇷", label: "한" },
+              { code: "en", flag: "🇺🇸", label: "EN" },
+              { code: "zh", flag: "🇨🇳", label: "中" },
+              { code: "ja", flag: "🇯🇵", label: "日" },
+              { code: "vi", flag: "🇻🇳", label: "VI" },
+            ].map((l) => (
+              <button key={l.code} onClick={() => setLocalL1(l.code)}
+                className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${localL1 === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
+                {l.flag} {l.label}
+              </button>
+            ))}
+          </div>
           {/* 비슷한 표현 */}
           {c.similar && c.similar.length > 0 && (
             <div className="rounded-2xl glass85 shadow p-3">
@@ -2698,7 +2765,7 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
                   <div key={s.expr} className="rounded-xl bg-purple-50 p-2">
                     <div className="flex items-start gap-1.5">
                       <span className="tt12 font-bold text-purple-700 shrink-0">{s.expr}</span>
-                      <span className="tt10 text-purple-500">{s.note}</span>
+                      <span className="tt10 text-purple-500"><NoteText note={s.note} lang={localL1} /></span>
                     </div>
                     {s.songs && s.songs.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
@@ -2724,7 +2791,7 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
                       <span className="tt12 font-bold text-rose-600">{ct.expr}</span>
                       <span className="tt9 px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-400">{ct.count}곡</span>
                     </div>
-                    <div className="tt10 text-purple-600 mt-0.5">{ct.note}</div>
+                    <div className="tt10 text-purple-600 mt-0.5"><NoteText note={ct.note} lang={localL1} /></div>
                     {ct.negForms && ct.negForms.length > 0 && (
                       <div className="mt-1">
                         <div className="tt9 text-purple-600 mb-0.5">가사에서의 부정형 ↓</div>
