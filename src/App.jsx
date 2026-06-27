@@ -1153,7 +1153,7 @@ function CollocationScreen({ go, ctx, bookmarks, toggleBookmark }) {
         </div>
 
         <div className="mt-3">
-          {tr && (
+          {c.translations && (
             <div className="mb-2">
               <div className="tt9 text-indigo-500 font-medium mb-1 flex items-center gap-1 flex-wrap">
                 <span className="text-sm">🌐</span>
@@ -3244,28 +3244,29 @@ function PuzzleScreen({ go, progress, award }) {
 }
 
 /* =============================== AI 평가 결과 카드 (문장·가사 공용) =============================== */
-function GradeResult({ fb, onSuno }) {
+function GradeResult({ fb, lang = "ko", onSuno }) {
+  const L = TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko;
   return (
     <div className="mt-4 rounded-2xl glass90 shadow p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <div className="text-xs font-black text-purple-700">🤖 AI 평가 결과</div>
-        <div className="text-lg font-black text-pink-500">{fb.score}점</div>
+        <div className="text-xs font-black text-purple-700">{L.aiResult}</div>
+        <div className="text-lg font-black text-pink-500">{fb.score}{L.score}</div>
       </div>
-      <div className="tt11"><b className="text-purple-600">사용한 연어</b> · <span className="text-purple-800">{(fb.used || []).join(", ")}</span></div>
+      <div className="tt11"><b className="text-purple-600">{L.usedColloc}</b> · <span className="text-purple-800">{(fb.used || []).join(", ")}</span></div>
       <div>
-        <div className="tt11 font-bold text-emerald-600 mb-0.5">잘한 점</div>
+        <div className="tt11 font-bold text-emerald-600 mb-0.5">{L.strength}</div>
         {(fb.good || []).map((g, i) => <div key={i} className="tt11 text-purple-800">• {g}</div>)}
       </div>
       <div>
-        <div className="tt11 font-bold text-amber-600 mb-0.5">보완할 점</div>
+        <div className="tt11 font-bold text-amber-600 mb-0.5">{L.improve}</div>
         {(fb.improve || []).map((g, i) => <div key={i} className="tt11 text-purple-800">• {g}</div>)}
       </div>
       <div className="rounded-xl bg-purple-50 p-2">
-        <div className="tt11 font-bold text-purple-600 mb-0.5">🔗 담화 응집성</div>
+        <div className="tt11 font-bold text-purple-600 mb-0.5">{L.cohesion}</div>
         <div className="tt11 text-purple-800 leading-relaxed">{fb.cohesion}</div>
       </div>
       <div className="rounded-xl bg-pink-50 p-2">
-        <div className="tt11 font-bold text-pink-600 mb-0.5">✍️ 수정 예시</div>
+        <div className="tt11 font-bold text-pink-600 mb-0.5">{L.revision}</div>
         <div className="tt12 text-purple-800 whitespace-pre-line">{fb.revision}</div>
       </div>
       {onSuno && (
@@ -3372,19 +3373,119 @@ const TASK_TRANSLATIONS = {
   },
 };
 
-function TaskL1Toggle({ task }) {
-  const [lang, setLang] = useState("ko");
+/* ── 활동·평가 라벨 다국어 사전 (SentenceMake·Bridge·LyricMake·GradeResult·TaskL1Toggle 공용) ── */
+const TASK_LABELS_I18N = {
+  ko: {
+    situation: "상황", speaker: "화자", listener: "청자", relation: "관계", purpose: "말하기 목적",
+    instructSentence: "✏️ 위 상황에 맞는 한 문장을 만들어 보세요.",
+    instructBridge: "✏️ 위 상황에 맞게 2~3문장으로 자연스럽게 이어 말해 보세요.",
+    instructLyricSit: "상황", instructLyricWrite: "🎵 가사 작성 (2~4줄)",
+    requiredColloc: "반드시 사용할 연어",
+    btnGrade: "🤖 AI 평가 받기", btnGrading: "AI가 평가 중…",
+    btnGradeLyric: "🎼 AI 평가 받기 (100점)", btnGradingLyric: "AI가 채점 중…",
+    aiResult: "🤖 AI 평가 결과", usedColloc: "사용한 연어",
+    strength: "잘한 점", improve: "보완할 점",
+    cohesion: "🔗 담화 응집성", revision: "✍️ 수정 예시",
+    notReady: "이 문항의 번역이 아직 준비되지 않았습니다.",
+    retry: "다시 쓰기", saveAndComplete: "💾 저장하고 완료",
+    next: "다음 →", prev: "← 이전",
+    score: "점", langHint: "🌐 모국어로 보기",
+  },
+  en: {
+    situation: "Situation", speaker: "Speaker", listener: "Listener", relation: "Relation", purpose: "Speaking purpose",
+    instructSentence: "✏️ Write one sentence that fits the situation above.",
+    instructBridge: "✏️ Write 2–3 sentences that naturally connect for the situation above.",
+    instructLyricSit: "Situation", instructLyricWrite: "🎵 Write the lyrics (2–4 lines)",
+    requiredColloc: "Collocations to use",
+    btnGrade: "🤖 Get AI evaluation", btnGrading: "AI is evaluating…",
+    btnGradeLyric: "🎼 Get AI evaluation (out of 100)", btnGradingLyric: "AI is scoring…",
+    aiResult: "🤖 AI Evaluation", usedColloc: "Collocations used",
+    strength: "Strengths", improve: "Areas to improve",
+    cohesion: "🔗 Discourse cohesion", revision: "✍️ Revised example",
+    notReady: "Translation for this item is not yet available.",
+    retry: "Try again", saveAndComplete: "💾 Save & complete",
+    next: "Next →", prev: "← Back",
+    score: "pts", langHint: "🌐 View in your language",
+  },
+  zh: {
+    situation: "情境", speaker: "说话者", listener: "听者", relation: "关系", purpose: "说话目的",
+    instructSentence: "✏️ 请根据上述情境写一句话。",
+    instructBridge: "✏️ 请根据上述情境自然地连接2–3句话。",
+    instructLyricSit: "情境", instructLyricWrite: "🎵 创作歌词 (2–4行)",
+    requiredColloc: "必须使用的搭配",
+    btnGrade: "🤖 获取AI评价", btnGrading: "AI正在评价…",
+    btnGradeLyric: "🎼 获取AI评价 (满分100)", btnGradingLyric: "AI正在评分…",
+    aiResult: "🤖 AI 评价结果", usedColloc: "使用的搭配",
+    strength: "优点", improve: "需改进之处",
+    cohesion: "🔗 语篇连贯性", revision: "✍️ 修改示例",
+    notReady: "该题的翻译尚未提供。",
+    retry: "重新写", saveAndComplete: "💾 保存并完成",
+    next: "下一个 →", prev: "← 上一个",
+    score: "分", langHint: "🌐 用母语查看",
+  },
+  ja: {
+    situation: "状況", speaker: "話し手", listener: "聞き手", relation: "関係", purpose: "話す目的",
+    instructSentence: "✏️ 上の状況に合う一文を書いてみましょう。",
+    instructBridge: "✏️ 上の状況に合わせて2〜3文を自然につなげて書きましょう。",
+    instructLyricSit: "状況", instructLyricWrite: "🎵 歌詞作成 (2〜4行)",
+    requiredColloc: "必ず使う連語",
+    btnGrade: "🤖 AI評価を受ける", btnGrading: "AIが評価中…",
+    btnGradeLyric: "🎼 AI評価を受ける (100点)", btnGradingLyric: "AIが採点中…",
+    aiResult: "🤖 AI評価結果", usedColloc: "使った連語",
+    strength: "良かった点", improve: "改善点",
+    cohesion: "🔗 談話の結束性", revision: "✍️ 修正例",
+    notReady: "この問題の翻訳はまだ用意されていません。",
+    retry: "やり直す", saveAndComplete: "💾 保存して完了",
+    next: "次へ →", prev: "← 前へ",
+    score: "点", langHint: "🌐 母語で見る",
+  },
+  vi: {
+    situation: "Tình huống", speaker: "Người nói", listener: "Người nghe", relation: "Mối quan hệ", purpose: "Mục đích nói",
+    instructSentence: "✏️ Hãy viết một câu phù hợp với tình huống trên.",
+    instructBridge: "✏️ Hãy nối 2–3 câu một cách tự nhiên cho tình huống trên.",
+    instructLyricSit: "Tình huống", instructLyricWrite: "🎵 Viết lời (2–4 dòng)",
+    requiredColloc: "Các collocation phải sử dụng",
+    btnGrade: "🤖 Nhận đánh giá AI", btnGrading: "AI đang đánh giá…",
+    btnGradeLyric: "🎼 Nhận đánh giá AI (100 điểm)", btnGradingLyric: "AI đang chấm…",
+    aiResult: "🤖 Kết quả đánh giá AI", usedColloc: "Collocation đã dùng",
+    strength: "Điểm tốt", improve: "Điểm cần cải thiện",
+    cohesion: "🔗 Tính liên kết diễn ngôn", revision: "✍️ Ví dụ chỉnh sửa",
+    notReady: "Bản dịch cho mục này chưa có sẵn.",
+    retry: "Viết lại", saveAndComplete: "💾 Lưu và hoàn tất",
+    next: "Tiếp →", prev: "← Trước",
+    score: "điểm", langHint: "🌐 Xem bằng tiếng mẹ đẻ",
+  },
+};
 
-  function switchLang(code) { setLang(code); }
+/* ── 다국어 안내 라벨 한 줄 공용 컴포넌트 ── */
+function MultiLangHint() {
+  return (
+    <div className="tt9 text-indigo-500 font-medium mb-1 flex items-center gap-1 flex-wrap">
+      <span className="text-sm">🌐</span>
+      <span>모국어로 보기</span>
+      <span className="text-indigo-300">·</span>
+      <span>Your language</span>
+      <span className="text-indigo-300">·</span>
+      <span>母语</span>
+      <span className="text-indigo-300">·</span>
+      <span>母語</span>
+      <span className="text-indigo-300">·</span>
+      <span>Ngôn ngữ</span>
+    </div>
+  );
+}
 
+function TaskL1Toggle({ task, lang, setLang }) {
   const dict = TASK_TRANSLATIONS[task.situation];
   const tr = dict ? dict[lang] : null;
+  const L = TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko;
 
   return (
     <div className="mt-2">
+      <MultiLangHint />
       <div className="flex gap-1 flex-wrap">
         {TASK_LANGS.map((l) => (
-          <button key={l.code} onClick={() => switchLang(l.code)}
+          <button key={l.code} onClick={() => setLang(l.code)}
             className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${lang === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
             {l.flag} {l.label}
           </button>
@@ -3392,14 +3493,14 @@ function TaskL1Toggle({ task }) {
       </div>
       {lang !== "ko" && tr && (
         <div className="mt-1.5 rounded-xl bg-indigo-50 border border-indigo-100 p-2.5 space-y-0.5 tt11 text-indigo-700">
-          <div><b>Situation:</b> {tr.situation}</div>
-          <div><b>Relation:</b> {tr.relation}</div>
-          <div><b>Purpose:</b> {tr.purpose}</div>
+          <div><b>{L.situation}:</b> {tr.situation}</div>
+          <div><b>{L.relation}:</b> {tr.relation}</div>
+          <div><b>{L.purpose}:</b> {tr.purpose}</div>
         </div>
       )}
       {lang !== "ko" && !tr && (
         <div className="mt-1.5 rounded-xl bg-amber-50 p-2 tt10 text-amber-600 text-center">
-          이 문항의 번역이 아직 준비되지 않았습니다.
+          {L.notReady}
         </div>
       )}
     </div>
@@ -3425,6 +3526,8 @@ function SentenceMakeScreen({ go, progress, award }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [lang, setLang] = useState("ko");
+  const L = TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko;
   const alreadyDone = !!progress.done.sentence;
 
   async function submit() {
@@ -3461,21 +3564,21 @@ function SentenceMakeScreen({ go, progress, award }) {
         <div className="flex items-center gap-1.5 mb-2">
           <Pill className="bg-pink-100 text-pink-500">{task.domain}</Pill>
         </div>
-        <Pill className="bg-purple-100 text-purple-500 mb-1">상황</Pill>
+        <Pill className="bg-purple-100 text-purple-500 mb-1">{L.situation}</Pill>
         <p className="tt13 text-purple-800 leading-relaxed mt-1">{task.situation}</p>
         <div className="mt-2 space-y-0.5 tt11 text-purple-600">
-          <div>🙂 <b>화자</b>: {task.speaker} → 🎧 <b>청자</b>: {task.listener}</div>
-          <div>🤝 <b>관계</b>: {task.relation}</div>
-          <div>🎯 <b>말하기 목적</b>: {task.purpose}</div>
+          <div>🙂 <b>{L.speaker}</b>: {task.speaker} → 🎧 <b>{L.listener}</b>: {task.listener}</div>
+          <div>🤝 <b>{L.relation}</b>: {task.relation}</div>
+          <div>🎯 <b>{L.purpose}</b>: {task.purpose}</div>
         </div>
         <div className="flex flex-wrap gap-1 mt-2">
           {task.required.map((w) => <Pill key={w} className="bg-pink-100 text-pink-500">{w}</Pill>)}
         </div>
-        <TaskL1Toggle task={task} />
+        <TaskL1Toggle task={task} lang={lang} setLang={setLang} />
       </div>
 
       <div className="mt-3">
-        <label className="text-xs font-bold text-purple-600">✏️ 위 상황에 맞는 한 문장을 만들어 보세요.</label>
+        <label className="text-xs font-bold text-purple-600">{L.instructSentence}</label>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={200}
           placeholder={task.hint}
           className="w-full mt-1 rounded-2xl border border-purple-200 glass80 p-3 text-sm text-purple-800 outline-none focus:border-pink-300" />
@@ -3485,7 +3588,7 @@ function SentenceMakeScreen({ go, progress, award }) {
 
       <button onClick={submit} disabled={loading}
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
-        {loading ? "AI가 평가 중…" : "🤖 AI 평가 받기"}
+        {loading ? L.btnGrading : L.btnGrade}
       </button>
 
       {!fb && !loading && (
@@ -3504,7 +3607,7 @@ function SentenceMakeScreen({ go, progress, award }) {
       )}
 
       {fb && <>
-        <GradeResult fb={fb} />
+        <GradeResult fb={fb} lang={lang} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
         <div className="flex gap-2 mt-3">
           <button onClick={() => { setText(""); setFb(null); }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">다시 쓰기</button>
@@ -3608,6 +3711,8 @@ function BridgeScreen({ go, progress, award }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [lang, setLang] = useState("ko");
+  const L = TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko;
   const alreadyDone = !!progress.done.bridge;
 
   async function submit() {
@@ -3644,22 +3749,22 @@ function BridgeScreen({ go, progress, award }) {
         <div className="flex items-center gap-1.5 mb-2">
           <Pill className="bg-pink-100 text-pink-500">{task.domain}</Pill>
         </div>
-        <Pill className="bg-purple-100 text-purple-500 mb-1">상황</Pill>
+        <Pill className="bg-purple-100 text-purple-500 mb-1">{L.situation}</Pill>
         <p className="tt13 text-purple-800 leading-relaxed mt-1">{task.situation}</p>
         <div className="mt-2 space-y-0.5 tt11 text-purple-600">
-          <div>🙂 <b>화자</b>: {task.speaker} → 🎧 <b>청자</b>: {task.listener}</div>
-          <div>🤝 <b>관계</b>: {task.relation}</div>
-          <div>🎯 <b>말하기 목적</b>: {task.purpose}</div>
+          <div>🙂 <b>{L.speaker}</b>: {task.speaker} → 🎧 <b>{L.listener}</b>: {task.listener}</div>
+          <div>🤝 <b>{L.relation}</b>: {task.relation}</div>
+          <div>🎯 <b>{L.purpose}</b>: {task.purpose}</div>
         </div>
         <div className="flex flex-wrap gap-1 mt-2">
           {task.required.map((w) => <Pill key={w} className="bg-pink-100 text-pink-500">{w}</Pill>)}
         </div>
         <p className="tt10 text-purple-500 mt-2">💡 {task.guide}</p>
-        <TaskL1Toggle task={task} />
+        <TaskL1Toggle task={task} lang={lang} setLang={setLang} />
       </div>
 
       <div className="mt-3">
-        <label className="text-xs font-bold text-purple-600">✏️ 위 상황에 맞게 2~3문장으로 자연스럽게 이어 말해 보세요.</label>
+        <label className="text-xs font-bold text-purple-600">{L.instructBridge}</label>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} maxLength={300}
           placeholder={task.hint}
           className="w-full mt-1 rounded-2xl border border-purple-200 glass80 p-3 text-sm text-purple-800 outline-none focus:border-pink-300" />
@@ -3669,7 +3774,7 @@ function BridgeScreen({ go, progress, award }) {
 
       <button onClick={submit} disabled={loading}
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
-        {loading ? "AI가 평가 중…" : "🤖 AI 평가 받기"}
+        {loading ? L.btnGrading : L.btnGrade}
       </button>
 
       {!fb && !loading && (
@@ -3688,7 +3793,7 @@ function BridgeScreen({ go, progress, award }) {
       )}
 
       {fb && <>
-        <GradeResult fb={fb} />
+        <GradeResult fb={fb} lang={lang} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
 
         {/* 대화로 듣기 */}
@@ -3720,6 +3825,8 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [lang, setLang] = useState("ko");
+  const L = TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko;
   const alreadyDone = !!progress.done.lyric;
 
   async function submit() {
@@ -3739,14 +3846,25 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
       <Header title="가사 만들기 🎤" onBack={() => go("course")} />
       <p className="text-center tt11 text-purple-600 mb-2">배운 연어로 짧은 K-POP 가사를 창작하고 100점 만점 평가를 받아요</p>
       <div className="rounded-2xl glass85 shadow p-3">
-        <Pill className="bg-purple-100 text-purple-500 mb-1">상황</Pill>
+        <Pill className="bg-purple-100 text-purple-500 mb-1">{L.instructLyricSit}</Pill>
         <p className="tt13 text-purple-800 leading-relaxed mt-1">{task.situation}</p>
-        <div className="tt10 text-purple-600 mt-2">반드시 사용할 연어</div>
+        <div className="tt10 text-purple-600 mt-2">{L.requiredColloc}</div>
         <div className="flex flex-wrap gap-1 mt-1">{task.required.map((w) => <Pill key={w} className="bg-pink-100 text-pink-500">{w}</Pill>)}</div>
+        <div className="mt-2">
+          <MultiLangHint />
+          <div className="flex gap-1 flex-wrap">
+            {TASK_LANGS.map((l) => (
+              <button key={l.code} onClick={() => setLang(l.code)}
+                className={`rounded-full px-2.5 py-1 tt10 font-bold transition active:scale-95 ${lang === l.code ? "bg-indigo-500 text-white shadow" : "bg-indigo-50 text-indigo-600"}`}>
+                {l.flag} {l.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="mt-3">
-        <label className="text-xs font-bold text-purple-600">🎵 가사 작성 (2~4줄)</label>
+        <label className="text-xs font-bold text-purple-600">{L.instructLyricWrite}</label>
         <textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} maxLength={300}
           placeholder={task.hint}
           className="w-full mt-1 rounded-2xl border border-purple-200 glass80 p-3 text-sm text-purple-800 outline-none focus:border-pink-300 whitespace-pre-line" />
@@ -3756,7 +3874,7 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
 
       <button onClick={submit} disabled={loading}
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
-        {loading ? "AI가 채점 중…" : "🎼 AI 평가 받기 (100점)"}
+        {loading ? L.btnGradingLyric : L.btnGradeLyric}
       </button>
       {!fb && (
         <p className={`tt11 text-center mt-2 font-bold text-violet-500 ${loading ? "animate-pulse" : ""}`}>
@@ -3765,12 +3883,12 @@ function LyricMakeScreen({ go, progress, award, saveRecord }) {
       )}
 
       {fb && <>
-        <GradeResult fb={fb} onSuno={{ copy: () => navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("직접 선택해서 복사해 주세요.")) }} />
+        <GradeResult fb={fb} lang={lang} onSuno={{ copy: () => navigator.clipboard.writeText(text).then(() => alert("가사가 복사되었습니다! ✅")).catch(() => alert("직접 선택해서 복사해 주세요.")) }} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
         <div className="flex gap-2 mt-3">
-          <button onClick={() => { setText(""); setFb(null); }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">다시 쓰기</button>
+          <button onClick={() => { setText(""); setFb(null); }} className="flex-1 rounded-full py-2 tt11 font-bold bg-purple-100 text-purple-600 active:scale-95">{L.retry}</button>
           <button onClick={() => { if (saveRecord) saveRecord({ word: task.required.join(", "), song: "가사 창작", text }); go("course"); }}
-            className="flex-1 rounded-full py-2 tt11 font-black bg-pink-400 text-white active:scale-95">💾 저장하고 완료</button>
+            className="flex-1 rounded-full py-2 tt11 font-black bg-pink-400 text-white active:scale-95">{L.saveAndComplete}</button>
         </div>
       </>}
     </div>
@@ -4440,6 +4558,7 @@ function SitSpeakMission({ sit }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [lang, setLang] = useState("ko");
   const [isListening, setIsListening] = useState(false);
   const recogRef = React.useRef(null);
 
@@ -4523,11 +4642,11 @@ function SitSpeakMission({ sit }) {
 
       <button onClick={submit} disabled={loading}
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
-        {loading ? "AI가 평가 중…" : "🤖 AI 평가 받기"}
+        {loading ? (TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko).btnGrading : (TASK_LABELS_I18N[lang] || TASK_LABELS_I18N.ko).btnGrade}
       </button>
 
       {fb && <>
-        <GradeResult fb={fb} />
+        <GradeResult fb={fb} lang={lang} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
       </>}
     </div>
@@ -4542,6 +4661,7 @@ function SitLyricMake({ sit, saveRecord }) {
   const [fb, setFb] = useState(null);
   const [err, setErr] = useState("");
   const [usedAI, setUsedAI] = useState(true);
+  const [lang, setLang] = useState("ko");
   if (list.length === 0) return <div className="tt12 text-purple-600">아직 등록된 가사 미션이 없습니다.</div>;
   const task = list[0];
 
@@ -4576,11 +4696,11 @@ function SitLyricMake({ sit, saveRecord }) {
 
       <button onClick={submit} disabled={loading}
         className="w-full rounded-full py-2.5 text-sm font-black bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow active:scale-95 disabled:opacity-60">
-        {loading ? "AI가 채점 중…" : "🎼 AI 평가 받기 (100점)"}
+        {loading ? L.btnGradingLyric : L.btnGradeLyric}
       </button>
 
       {fb && <>
-        <GradeResult fb={fb} />
+        <GradeResult fb={fb} lang={lang} />
         {!usedAI && <div className="tt10 text-amber-500 text-left mt-1">※ 네트워크 문제로 임시(템플릿) 평가가 표시되었습니다.</div>}
         {saveRecord && (
           <button onClick={() => saveRecord({ word: task.required.join(", "), song: `${sit.name} 가사 창작`, text })}
