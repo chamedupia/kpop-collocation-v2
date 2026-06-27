@@ -344,6 +344,7 @@ const SONGS = [
   {
     id: "bts-make-it-right", situation: "comfort",
     artist: "BTS", title: "Make It Right",
+    youtubeId: "wHX8_JwxPoQ", lyricStart: 30,
     mood: "설렘과 함께하기", emoji: "🤝",
     cover: "from-purple-300 via-pink-300 to-rose-300",
     lyricLines: ["그 손 내가 잡아도 될까", "너라는 세상 속으로"],
@@ -461,6 +462,36 @@ const SONGS = [
 
 
 const ARTISTS = [...new Set(SONGS.map((s) => s.artist))];
+
+/* ============================== YouTube 외부 연결 헬퍼 ==============================
+   광고 우회 정책:
+   1) youtube-nocookie.com 도메인 사용 (개인정보 추적 최소화)
+   2) start 파라미터로 lyricStart 시점부터 재생 (인트로 우회, 학습 효율 향상)
+   3) rel=0 으로 관련 영상 표시 차단
+   4) cc_load_policy=1 로 한국어 자막 자동 활성화
+   ※ YouTube 광고 자체는 Premium 외에는 완전 차단 불가
+*/
+const _norm = (v) => (v || "").toString().toLowerCase().trim();
+const SONGS_MAP = (() => {
+  const m = {};
+  SONGS.forEach((s) => {
+    m[`${_norm(s.artist)}|${_norm(s.title)}`] = s;
+  });
+  return m;
+})();
+function findSongMeta(artist, title) {
+  return SONGS_MAP[`${_norm(artist)}|${_norm(title)}`] || null;
+}
+function openYouTubeNoAds(youtubeId, lyricStart) {
+  /* K-POP MV는 외부 도메인 임베드 제한(오류 153)이 빈번하므로 표준 watch URL 사용.
+     &t=Xs 로 가사 시작 시점에 점프하여 인트로 부분을 우회한다.
+     영상 광고 자체는 YouTube Premium 외에는 합법적·기술적 차단이 불가하다. */
+  if (!youtubeId) return;
+  const t = lyricStart || 0;
+  const tParam = t > 0 ? `&t=${t}s` : "";
+  const url = `https://www.youtube.com/watch?v=${youtubeId}${tParam}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
 
 /* ============================== iTunes 앨범 커버 (JSONP) ============================== */
 /* JSONP: fetch()는 CORS에 막히지만 <script> 태그는 통과함 */
@@ -945,8 +976,7 @@ function PlayerScreen({ go, ctx }) {
   // 구간 듣기: YouTube 해당 시점부터 열기
   function handleSegmentYouTube() {
     if (!song.youtubeId) return;
-    const t = song.lyricStart || 0;
-    window.open(`https://www.youtube-nocookie.com/embed/${song.youtubeId}?autoplay=1&start=${t}&rel=0&cc_load_policy=1&cc_lang_pref=ko&hl=ko`, "_blank");
+    openYouTubeNoAds(song.youtubeId, song.lyricStart);
   }
 
   const sameSituation = SONGS.filter((s) => s.situation === song.situation);
@@ -1041,7 +1071,7 @@ function PlayerScreen({ go, ctx }) {
       </div>
       <div className="flex items-center justify-center mt-3">
         <button onClick={() => {
-          if (song.youtubeId) window.open(`https://www.youtube-nocookie.com/embed/${song.youtubeId}?autoplay=1&rel=0&cc_load_policy=1&cc_lang_pref=ko&hl=ko`, "_blank");
+          if (song.youtubeId) openYouTubeNoAds(song.youtubeId, 0);
           else alert("이 곡의 YouTube 영상이 아직 등록되지 않았습니다.");
         }}
           className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-white tt12 font-bold active:scale-95 shadow bg-red-500">
@@ -2824,20 +2854,41 @@ function CardLearnScreen({ go, progress, award, l1Lang }) {
             </div>
           )}
 
-          {/* 등장 곡 목록 */}
+          {/* 등장 곡 목록 (각 곡 클릭 시 YouTube 가사 시점으로 이동) */}
           {c.sourceSongs && c.sourceSongs.length > 0 && (
             <div className="rounded-2xl glass85 shadow p-3">
-              <div className="tt11 font-bold text-purple-600 mb-1.5">🎵 이 연어가 나온 곡</div>
+              <div className="tt11 font-bold text-purple-600 mb-1.5 flex items-center justify-between">
+                <span>🎵 이 연어가 나온 곡</span>
+                <span className="tt9 font-normal text-purple-400">▶ 곡 클릭 시 YouTube 재생</span>
+              </div>
               <div className="space-y-1">
-                {c.sourceSongs.map((s, i) => (
-                  <div key={i} className="rounded-xl bg-purple-50 p-2 flex items-start gap-2">
-                    <span className={`tt9 px-1.5 py-0.5 rounded-full shrink-0 ${s.type === "찾은 연어" ? "bg-pink-100 text-pink-500" : s.type === "관계 연어" ? "bg-indigo-100 text-indigo-500" : "bg-amber-100 text-amber-600"}`}>{s.type}</span>
-                    <div className="min-w-0">
-                      <div className="tt11 font-bold text-purple-700">{s.artist} — {s.title}</div>
-                      <div className="tt10 text-purple-500 italic">"{s.lyric}"</div>
-                    </div>
-                  </div>
-                ))}
+                {c.sourceSongs.map((s, i) => {
+                  const meta = findSongMeta(s.artist, s.title);
+                  const hasYt = !!(meta && meta.youtubeId);
+                  const handleClick = hasYt ? () => openYouTubeNoAds(meta.youtubeId, meta.lyricStart) : undefined;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={handleClick}
+                      disabled={!hasYt}
+                      className={`w-full text-left rounded-xl p-2 flex items-start gap-2 transition ${hasYt ? "bg-purple-50 hover:bg-purple-100 active:scale-[0.98] cursor-pointer" : "bg-gray-50 cursor-not-allowed opacity-70"}`}
+                    >
+                      <span className={`tt9 px-1.5 py-0.5 rounded-full shrink-0 ${s.type === "찾은 연어" ? "bg-pink-100 text-pink-500" : s.type === "관계 연어" ? "bg-indigo-100 text-indigo-500" : "bg-amber-100 text-amber-600"}`}>{s.type}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="tt11 font-bold text-purple-700 flex items-center gap-1.5">
+                          <span className="truncate">{s.artist} — {s.title}</span>
+                          {hasYt ? (
+                            <span className="tt9 text-red-500 shrink-0">▶</span>
+                          ) : (
+                            <span className="tt9 text-gray-400 shrink-0">(영상 준비 중)</span>
+                          )}
+                        </div>
+                        {s.lyric && <div className="tt10 text-purple-500 italic">"{s.lyric}"</div>}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
